@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">TurtlPass</string>
+    <string name="app_logo_content_description">TurtlPass logo</string>
+    <string name="button_unlock">Unlock</string>
+    <string name="connect_your_device">Connect your device</string>
+    <string name="input_label_account_id">Account ID / Email</string>
+    <string name="input_label_choose_app">Choose an App</string>
+    <string name="input_label_filter_app">Type to filter listed apps</string>
+    <string name="rationale_permission">Enable the Contacts permission to display a list of your accounts, making it easier for you to select the one you want to use.</string>
+    <string name="rationale_permission_button">Enable Contacts Permission</string>
+    <string name="rationale_app_settings">To display a list of your accounts enable the Contacts permission in the app settings.</string>
+    <string name="rationale_app_settings_button">Settings</string>
+    <string name="rationale_usb_button">Enable USB Connections</string>
+    <string name="rationale_usb">Make sure to enable USB connections so the app can communicate with your TurtlPass device.</string>
+    <string name="rationale_accessibility">Enable the accessibility service to automatically populate the App field when switching back from another app.</string>
+    <string name="rationale_accessibility_button">Enable Accessibility</string>
+    <string name="accessibility_service_permission">TurtlPass: Auto-Detect App</string>
+    <string name="accessibility_service_permission_desc">
+        Turning this on allows the automatic detection of
+        the current/last app in foreground that you might want to unlock.
+        \n\nAdvantage: No need to find the app you want to unlock from the list of installed apps.
+    </string>
+    <string name="connect_usb_device">Connect USB Device</string>
+    <string name="authorise_usb_device">Authorise USB Device</string>
+    <string name="connect_usb_device_ready">USB Device Ready</string>
+    <string name="enter_pin">Enter your PIN</string>
+    <string name="connecting">Connecting...</string>
+    <string name="error_try_again">Error! Please Try Again</string>
+    <string name="success_device_ready">Success! Device Ready</string>
+    <string name="recent_app">Recent:</string>
+    <string name="close">Close</string>
+    <string name="try_again">Try Again</string>
+    <string name="button_authorise">Authorise</string>
+    <string name="button_unlock_now">Unlock Now</string>
+</resources>

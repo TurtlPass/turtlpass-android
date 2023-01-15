@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+
+    <base-config cleartextTrafficPermitted="@bool/uses_clear_text_traffic">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <domain-config cleartextTrafficPermitted="@bool/uses_clear_text_traffic">
+        <domain includeSubdomains="true">@string/gravatar_base_url</domain>
+    </domain-config>
+
+</network-security-config>

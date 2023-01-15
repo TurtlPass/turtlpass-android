@@ -1,0 +1,10 @@
+.DS_Store
+/.idea
+/build
+/app/build
+/app/release
+/.gradle
+/local.properties
+/app/plugins/internal/build/
+/app/plugins/internal/.gradle/
+google-services.json
