@@ -17,14 +17,6 @@ object HardwareConfiguration {
         const val CR = "\r"
     }
 
-    object RaspberryPiPico {
-        const val vendorId: Int = 11914
-        const val productId: Int = 32778
-    }
-
-    fun isSupported(device: UsbDevice): Boolean {
-        with(RaspberryPiPico) {
-            return device.vendorId == vendorId && device.productId == productId
-        }
-    }
+    private const val raspberryPiVendorId: Int = 11914
+    fun isSupported(device: UsbDevice) = device.vendorId == raspberryPiVendorId
 }
