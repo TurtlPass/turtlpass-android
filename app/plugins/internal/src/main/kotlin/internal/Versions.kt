@@ -4,9 +4,10 @@ package internal
 
 object Versions {
     const val jetpackCore = "1.9.0" // https://developer.android.com/jetpack/androidx/releases/core
-    const val ktxCore = "1.7.21" // https://kotlinlang.org/docs/releases.html#release-details
-    const val compose = "1.4.0-alpha02" // https://developer.android.com/jetpack/androidx/versions/all-channel
-    //|> 1.4.0-alpha02 compatible with Kotlin 1.7.21
+    const val ktxCore = "1.8.0" // https://kotlinlang.org/docs/releases.html#release-details
+    const val compose = "1.4.0" // https://developer.android.com/jetpack/androidx/versions/all-channel
+    //|> 1.4.0 compatible with Kotlin 1.8.0
+    const val jetpack = "1.4.0-alpha03"
     const val ktxCoroutinesAndroid = "1.6.0"
     const val hilt = "1.0.0"
     const val hiltCore = "2.44" // https://github.com/google/dagger/releases

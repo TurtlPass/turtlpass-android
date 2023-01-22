@@ -2,7 +2,6 @@ package com.turtlpass.module.chooser.ui
 
 import android.content.Intent
 import android.content.res.Configuration
-import android.hardware.usb.UsbDevice
 import android.net.Uri
 import android.provider.Settings
 import androidx.compose.animation.AnimatedVisibility
@@ -21,7 +20,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.turtlpass.R
 import com.turtlpass.common.domain.Result
-import com.turtlpass.module.chooser.*
+import com.turtlpass.module.chooser.AccountsPermission
+import com.turtlpass.module.chooser.ChooserUiState
+import com.turtlpass.module.chooser.PermissionState
+import com.turtlpass.module.chooser.UsbPermission
+import com.turtlpass.module.chooser.UsbState
 import com.turtlpass.module.chooser.model.ChooserInputs
 import com.turtlpass.module.installedapp.model.InstalledApp
 import com.turtlpass.module.useraccount.model.UserAccount
@@ -32,9 +35,7 @@ import com.turtlpass.theme.AppTheme
 fun NotificationsContainer(
     modifier: Modifier = Modifier,
     uiState: State<ChooserUiState>,
-    usbState: State<UsbState>,
     permissionState: State<PermissionState>,
-    onRequestUsbPermission: (usbDevice: UsbDevice) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -42,21 +43,6 @@ fun NotificationsContainer(
         modifier = modifier
             .verticalScroll(rememberScrollState())
     ) {
-        // USB Permission
-        AnimatedVisibility(
-            visible = usbState.value.usbDevice != null
-                    && usbState.value.usbPermission == UsbPermission.NotGranted
-        ) {
-            ActionCard(
-                text = stringResource(R.string.rationale_usb),
-                buttonText = stringResource(R.string.rationale_usb_button),
-                onClick = {
-                    usbState.value.usbDevice?.let { usbDevice ->
-                        onRequestUsbPermission(usbDevice)
-                    }
-                },
-            )
-        }
         // Accounts Permission
         AccountsPermissionCard(
             permissionState = permissionState,
@@ -121,9 +107,7 @@ private fun Preview() {
 
         NotificationsContainer(
             uiState = uiState,
-            usbState = usbState,
             permissionState = permissionsState,
-            onRequestUsbPermission = {},
         )
     }
 }

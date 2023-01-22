@@ -1,7 +1,6 @@
 package com.turtlpass.module.chooser.ui
 
 import android.content.res.Configuration
-import android.hardware.usb.UsbDevice
 import android.view.Window
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -10,7 +9,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -28,7 +34,12 @@ import com.turtlpass.MainActivity
 import com.turtlpass.common.compose.rememberBottomSheetNavigator
 import com.turtlpass.common.compose.systemui.SystemUi
 import com.turtlpass.common.domain.Result
-import com.turtlpass.module.chooser.*
+import com.turtlpass.module.chooser.AccountsPermission
+import com.turtlpass.module.chooser.ChooserDestination
+import com.turtlpass.module.chooser.ChooserUiState
+import com.turtlpass.module.chooser.PermissionState
+import com.turtlpass.module.chooser.UsbPermission
+import com.turtlpass.module.chooser.UsbState
 import com.turtlpass.module.chooser.model.ChooserInputs
 import com.turtlpass.module.installedapp.model.InstalledApp
 import com.turtlpass.module.installedapp.ui.InstalledAppsScreen
@@ -61,7 +72,6 @@ fun ChooserScreen(
     onRecentApp: (app: InstalledApp) -> Unit,
     onUserAccount: (account: UserAccount?) -> Unit,
     onStoredAccount: (account: UserAccount) -> Unit,
-    onRequestUsbPermission: (usbDevice: UsbDevice) -> Unit,
     onPinCompleted: (pin: List<Int>) -> Unit,
     onWriteUsbSerial: () -> Unit,
     finishApp: () -> Unit,
@@ -134,7 +144,6 @@ fun ChooserScreen(
                                 onUserAccount(account)
                             },
                             navController = navController,
-                            onRequestUsbPermission = onRequestUsbPermission,
                         )
                     }
 
@@ -173,7 +182,7 @@ fun ChooserScreen(
                     bottomSheet(route = ChooserDestination.SheetPin.name) {
                         UserPinScreen(onPinCompleted = { pin ->
                             onPinCompleted(pin)
-                            if (usbState.value.usbDevice != null
+                            if (usbState.value.isUsbConnected
                                 && usbState.value.usbPermission == UsbPermission.Granted
                             ) {
                                 navController.navigate(ChooserDestination.SheetLoader.name)
@@ -187,9 +196,6 @@ fun ChooserScreen(
                     bottomSheet(route = ChooserDestination.SheetConnectUsb.name) {
                         ConnectUsbScreen(
                             usbState = usbState,
-                            onRequestUsbPermission = { usbDevice ->
-                                onRequestUsbPermission(usbDevice)
-                            },
                             onReadyClick = {
                                 navController.navigate(ChooserDestination.SheetLoader.name)
                                 onWriteUsbSerial()
@@ -265,7 +271,6 @@ private fun Preview() {
             onRecentApp = {},
             onUserAccount = {},
             onStoredAccount = {},
-            onRequestUsbPermission = {},
             onPinCompleted = {},
             onWriteUsbSerial = {},
             finishApp = {},

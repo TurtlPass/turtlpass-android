@@ -42,8 +42,7 @@ fun PulseHeader(
             tint = colors.default.accent,
             initialValue = 0.35f,
             bounded = false,
-            enabled = usbState.value.usbDevice != null
-                    && usbState.value.usbPermission == UsbPermission.Granted
+            enabled = usbState.value.isUsbConnected
         )
         Row(
             modifier = Modifier

@@ -1,6 +1,6 @@
 buildscript {
-    val gradleVersion = "7.4.0-rc01"
-    val kotlinVersion = "1.7.21" // internal.Versions.ktxCore
+    val gradleVersion = "7.4.0"
+    val kotlinVersion = "1.8.0" // internal.Versions.ktxCore
     val hiltVersion = "2.44" // internal.Versions.hiltCore
 
     repositories {

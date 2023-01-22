@@ -9,6 +9,7 @@ import android.hardware.usb.UsbManager
 import com.turtlpass.BuildConfig
 import com.turtlpass.common.extension.parcelable
 import com.turtlpass.di.ApplicationScope
+import com.turtlpass.module.usb.HardwareConfiguration
 import com.turtlpass.module.usb.UsbAction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
@@ -20,8 +21,10 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class UsbUpdatesUseCase @Inject constructor(
-    private val context: Context,
     @ApplicationScope private val coroutineScope: CoroutineScope,
+    private val context: Context,
+    private val usbManager: UsbManager,
+    private val requestUsbPermissionUseCase: RequestUsbPermissionUseCase,
 ) {
     suspend operator fun invoke(): Flow<UsbAction> {
         return callbackFlow {
@@ -39,11 +42,27 @@ class UsbUpdatesUseCase @Inject constructor(
                         UsbManager.ACTION_USB_DEVICE_ATTACHED -> {
                             intent.parcelable<UsbDevice>(UsbManager.EXTRA_DEVICE)
                                 ?.let { usbDevice ->
-                                    trySend(UsbAction.DeviceAttached(usbDevice))
+                                    when {
+                                        usbManager.hasPermission(usbDevice) -> {
+                                            trySend(UsbAction.DeviceAttached(usbDevice))
+                                            trySend(UsbAction.PermissionGranted)
+                                        }
+                                        HardwareConfiguration.isSupported(usbDevice) -> {
+                                            trySend(UsbAction.DeviceAttached(usbDevice))
+                                            requestUsbPermissionUseCase(usbDevice)
+                                        }
+                                        else -> {
+                                            // do nothing
+                                        }
+                                    }
                                 }
                         }
-                        UsbManager.ACTION_USB_DEVICE_DETACHED -> trySend(UsbAction.DeviceDetached)
-                        else -> Timber.w("Unknown USB Action")
+                        UsbManager.ACTION_USB_DEVICE_DETACHED -> {
+                            trySend(UsbAction.DeviceDetached)
+                        }
+                        else -> {
+                            Timber.w("Unknown USB Action")
+                        }
                     }
                 }
             }
@@ -52,6 +71,15 @@ class UsbUpdatesUseCase @Inject constructor(
                 addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED)
                 addAction(UsbManager.ACTION_USB_DEVICE_DETACHED)
             })
+            // initial check
+            usbManager.getUsbDeviceConnected()?.let { usbDevice ->
+                trySend(UsbAction.DeviceAttached(usbDevice))
+                if (usbManager.hasPermission(usbDevice)) {
+                    trySend(UsbAction.PermissionGranted)
+                } else {
+                    requestUsbPermissionUseCase(usbDevice)
+                }
+            }
             awaitClose {
                 context.unregisterReceiver(usbReceiver)
             }
@@ -60,6 +88,17 @@ class UsbUpdatesUseCase @Inject constructor(
             replay = 0,
             started = SharingStarted.WhileSubscribed() // keep the producer active while there are active subscribers
         )
+    }
+
+    private fun UsbManager.getUsbDeviceConnected(): UsbDevice? {
+        return this
+            .deviceList
+            .filterValues { usbDevice ->
+                HardwareConfiguration.isSupported(usbDevice)
+            }
+            .firstNotNullOfOrNull {
+                return it.value
+            }
     }
 
     companion object {

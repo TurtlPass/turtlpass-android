@@ -1,11 +1,15 @@
 package com.turtlpass.module.chooser.ui
 
 import android.content.res.Configuration
-import android.hardware.usb.UsbDevice
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
@@ -23,7 +27,12 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.turtlpass.R
 import com.turtlpass.common.compose.button.PrimaryButton
 import com.turtlpass.common.domain.Result
-import com.turtlpass.module.chooser.*
+import com.turtlpass.module.chooser.AccountsPermission
+import com.turtlpass.module.chooser.ChooserDestination
+import com.turtlpass.module.chooser.ChooserUiState
+import com.turtlpass.module.chooser.PermissionState
+import com.turtlpass.module.chooser.UsbPermission
+import com.turtlpass.module.chooser.UsbState
 import com.turtlpass.module.chooser.model.ChooserInputs
 import com.turtlpass.module.installedapp.model.InstalledApp
 import com.turtlpass.module.useraccount.model.UserAccount
@@ -42,7 +51,6 @@ fun ChooserContentScreen(
     onRecentApp: (app: InstalledApp) -> Unit,
     onAccountSelected: (account: UserAccount?) -> Unit,
     onStoredAccount: (account: UserAccount) -> Unit,
-    onRequestUsbPermission: (usbDevice: UsbDevice) -> Unit,
     navController: NavHostController,
 ) {
     val focusManager = LocalFocusManager.current
@@ -133,8 +141,6 @@ fun ChooserContentScreen(
         NotificationsContainer(
             permissionState = permissionState,
             uiState = uiState,
-            usbState = usbState,
-            onRequestUsbPermission = onRequestUsbPermission
         )
     }
 }
@@ -193,7 +199,6 @@ private fun Preview() {
             permissionState = permissionsState,
             onAccountSelected = {},
             onStoredAccount = {},
-            onRequestUsbPermission = {},
             onRecentApp = {},
             navController = navController,
         )

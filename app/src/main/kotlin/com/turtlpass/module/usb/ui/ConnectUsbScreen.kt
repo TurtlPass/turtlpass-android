@@ -42,7 +42,6 @@ import com.turtlpass.theme.icons.Usb
 @Composable
 fun ConnectUsbScreen(
     usbState: State<UsbState>,
-    onRequestUsbPermission: (usbDevice: UsbDevice) -> Unit,
     onReadyClick: () -> Unit,
 ) {
     val composition by rememberLottieComposition(
@@ -70,7 +69,7 @@ fun ConnectUsbScreen(
         )
         with(usbState.value) {
             val text = when {
-                usbDevice == null -> stringResource(R.string.connect_usb_device)
+                isUsbConnected.not() -> stringResource(R.string.connect_usb_device)
                 usbPermission == UsbPermission.NotGranted -> stringResource(R.string.authorise_usb_device)
                 else -> stringResource(R.string.connect_usb_device_ready)
             }
@@ -86,15 +85,13 @@ fun ConnectUsbScreen(
                 style = typography.h2,
             )
             AnimatedButton(
-                visible = usbDevice != null && usbPermission == UsbPermission.NotGranted,
+                visible = usbState.value.isUsbConnected && usbPermission == UsbPermission.NotGranted,
                 buttonText = stringResource(R.string.button_authorise),
                 buttonImageVector = Icons.Rounded.Usb,
-                onClick = {
-                    if (usbDevice != null) onRequestUsbPermission(usbDevice)
-                }
+                onClick = onReadyClick
             )
             AnimatedButton(
-                visible = usbDevice != null && usbPermission == UsbPermission.Granted,
+                visible = usbState.value.isUsbConnected && usbPermission == UsbPermission.Granted,
                 buttonText = stringResource(R.string.button_unlock_now),
                 buttonImageVector = Icons.Rounded.Security,
                 onClick = onReadyClick
@@ -163,7 +160,6 @@ private fun Preview(
 
         ConnectUsbScreen(
             usbState = usbState,
-            onRequestUsbPermission = {},
             onReadyClick = {},
         )
     }

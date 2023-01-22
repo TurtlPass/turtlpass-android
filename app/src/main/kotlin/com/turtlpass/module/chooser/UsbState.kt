@@ -3,6 +3,7 @@ package com.turtlpass.module.chooser
 import android.hardware.usb.UsbDevice
 
 data class UsbState(
+    val isUsbConnected: Boolean = false,
     val usbPermission: UsbPermission = UsbPermission.NotGranted,
     val usbDevice: UsbDevice? = null,
     val usbWriteResult: UsbWriteResult? = null,

@@ -6,14 +6,17 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.turtlpass.module.accessibility.usecase.AccessibilityUpdatesUseCase
 import com.turtlpass.module.accessibility.usecase.PackageUpdatesUseCase
-import com.turtlpass.module.chooser.*
+import com.turtlpass.module.chooser.AccountsPermission
+import com.turtlpass.module.chooser.ChooserUiState
+import com.turtlpass.module.chooser.PermissionState
+import com.turtlpass.module.chooser.UsbPermission
+import com.turtlpass.module.chooser.UsbState
+import com.turtlpass.module.chooser.UsbWriteResult
 import com.turtlpass.module.chooser.model.ChooserInputs
 import com.turtlpass.module.chooser.usecase.HashUserInputUseCase
 import com.turtlpass.module.installedapp.model.InstalledApp
 import com.turtlpass.module.installedapp.usecase.InstalledAppsUseCase
-import com.turtlpass.module.usb.HardwareConfiguration
 import com.turtlpass.module.usb.UsbAction
-import com.turtlpass.module.usb.usecase.RequestUsbPermissionUseCase
 import com.turtlpass.module.usb.usecase.UsbUpdatesUseCase
 import com.turtlpass.module.usb.usecase.WriteUsbSerialUseCase
 import com.turtlpass.module.useraccount.model.UserAccount
@@ -22,7 +25,16 @@ import com.turtlpass.module.useraccount.usecase.UserAccountsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,8 +48,7 @@ class ChooserViewModel @Inject constructor(
     private val accessibilityUpdatesUseCase: AccessibilityUpdatesUseCase,
     private val usbUpdatesUseCase: UsbUpdatesUseCase,
     private val hashUserInputUseCase: HashUserInputUseCase,
-    private val startUsbConnectionUseCase: WriteUsbSerialUseCase,
-    val requestUsbPermissionUseCase: RequestUsbPermissionUseCase,
+    private val writeUsbSerialUseCase: WriteUsbSerialUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ChooserUiState(model = ChooserInputs()))
@@ -100,20 +111,27 @@ class ChooserViewModel @Inject constructor(
 
     private fun processUsbUpdate(usbAction: UsbAction) {
         when (usbAction) {
+            is UsbAction.DeviceAttached -> {
+                _usbState.update { state ->
+                    state.copy(
+                        isUsbConnected = true,
+                        usbDevice = usbAction.usbDevice
+                    )
+                }
+            }
+            UsbAction.DeviceDetached -> {
+                _usbState.update { state ->
+                    state.copy(
+                        isUsbConnected = false,
+                        usbDevice = null
+                    )
+                }
+            }
             UsbAction.PermissionGranted -> {
                 _usbState.update { state -> state.copy(usbPermission = UsbPermission.Granted) }
             }
             UsbAction.PermissionNotGranted -> {
                 _usbState.update { state -> state.copy(usbPermission = UsbPermission.NotGranted) }
-            }
-            is UsbAction.DeviceAttached -> {
-                val usbDevice = usbAction.usbDevice
-                if (HardwareConfiguration.isSupported(usbDevice)) {
-                    _usbState.update { state -> state.copy(usbDevice = usbDevice) }
-                }
-            }
-            UsbAction.DeviceDetached -> {
-                _usbState.update { state -> state.copy(usbDevice = null) }
             }
         }
     }
@@ -148,24 +166,22 @@ class ChooserViewModel @Inject constructor(
     }
 
     fun updateUserAccount(account: UserAccount?) {
-        _uiState.update { state ->
-            state.copy(model = state.model.copy(userAccount = account))
-        }
+        _uiState.update { state -> state.copy(model = state.model.copy(userAccount = account)) }
     }
 
     private fun getUserAccounts() {
         viewModelScope.launch {
             userAccountsUseCase()
                 .onEach { result ->
-                    _uiState.update { uiState -> uiState.copy(userAccountsResult = result) }
+                    _uiState.update { state -> state.copy(userAccountsResult = result) }
                 }
                 .launchIn(this)
         }
     }
 
     fun updatePin(pin: List<Int>) {
-        _uiState.update { uiState ->
-            uiState.copy(model = uiState.model.copy(pin = pin.toString()))
+        _uiState.update { state ->
+            state.copy(model = state.model.copy(pin = pin.joinToString(separator = "")))
         }
     }
 
@@ -177,10 +193,15 @@ class ChooserViewModel @Inject constructor(
             _usbState.value.usbDevice?.let { usbDevice ->
                 hashUserInputUseCase(chooserInputs = uiState.value.model)
                     .flatMapMerge { hash ->
-                        startUsbConnectionUseCase(usbDevice, hash)
+                        writeUsbSerialUseCase(usbDevice, hash)
                     }
                     .collect { result ->
-                        _usbState.update { state -> state.copy(usbWriteResult = result) }
+                        _usbState.update { state ->
+                            state.copy(usbWriteResult = result)
+                        }
+                        if (result == UsbWriteResult.Success) {
+                            _uiState.update { state -> state.copy(model = ChooserInputs()) }
+                        }
                     }
             }
         }

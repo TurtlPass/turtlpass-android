@@ -51,30 +51,13 @@ class MainActivity : AppCompatActivity() {
                 uiState = viewModel.uiState.collectAsState(),
                 usbState = viewModel.usbState.collectAsState(),
                 permissionState = viewModel.permissionState.collectAsState(),
-                onInstalledApp = { app ->
-                    viewModel.updateInstalledApp(app)
-                },
-                onRecentApp = { app ->
-                    viewModel.selectRecentApp(app)
-                },
-                onUserAccount = { account ->
-                    viewModel.updateUserAccount(account)
-                },
-                onStoredAccount = { account ->
-                    viewModel.selectStoredAccount(account)
-                },
-                onRequestUsbPermission = {
-                    viewModel.requestUsbPermissionUseCase(it)
-                },
-                onPinCompleted = { pin ->
-                    viewModel.updatePin(pin)
-                },
-                onWriteUsbSerial = {
-                    viewModel.writeUsbSerial()
-                },
-                finishApp = {
-                    finishAffinity() // closes the app and keeps it in the Recent apps screen
-                }
+                onInstalledApp = { app -> viewModel.updateInstalledApp(app) },
+                onRecentApp = { app -> viewModel.selectRecentApp(app) },
+                onUserAccount = { account -> viewModel.updateUserAccount(account) },
+                onStoredAccount = { account -> viewModel.selectStoredAccount(account) },
+                onPinCompleted = { pin -> viewModel.updatePin(pin) },
+                onWriteUsbSerial = { viewModel.writeUsbSerial() },
+                finishApp = { finish() }
             )
         }
     }

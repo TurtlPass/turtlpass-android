@@ -17,6 +17,6 @@ object HardwareConfiguration {
         const val CR = "\r"
     }
 
-    private const val raspberryPiVendorId: Int = 11914
+    private const val raspberryPiVendorId: Int = 11914 // HEX: 0x2E8A
     fun isSupported(device: UsbDevice) = device.vendorId == raspberryPiVendorId
 }

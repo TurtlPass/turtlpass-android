@@ -47,7 +47,7 @@ class HashUserInputUseCaseTest {
 
                 verify { accountRepository.persistAccountId(packageName, email) }
 
-                val expectedHash = sha512(topLevelDomain + email + pin)
+                val expectedHash = sha512(pin + topLevelDomain + email)
 
                 advanceTimeBy(2000L)
                 runCurrent()

@@ -19,11 +19,11 @@ class HashUserInputUseCase @Inject constructor(
     operator fun invoke(chooserInputs: ChooserInputs): Flow<String> {
         return flow {
             val packageName = chooserInputs.installedApp?.packageName ?: ""
+            val pin = chooserInputs.pin ?: ""
             val topLevelDomain = chooserInputs.installedApp?.topLevelDomain ?: ""
             val accountId = chooserInputs.userAccount?.accountId ?: ""
-            val pin = chooserInputs.pin ?: ""
             accountRepository.persistAccountId(packageName, accountId)
-            val hash = sha512(topLevelDomain + accountId + pin)
+            val hash = sha512(pin + topLevelDomain + accountId)
             delay(2000L)
             emit(hash)
         }.catch {
