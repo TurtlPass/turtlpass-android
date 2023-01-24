@@ -47,7 +47,7 @@ TurtlPass Android sends a hash of the user's inputs (App Domain, Account ID, and
 
 **Third-party libraries used in the project:**
 
-[Hilt](https://dagger.dev/hilt/), [Coil](https://github.com/coil-kt/coil), [OkHttp](https://github.com/square/okhttp), [UsbSerial](https://github.com/felHR85/UsbSerial), [Lottie](https://github.com/airbnb/lottie-android), etc.
+[Hilt](https://dagger.dev/hilt/), [Coil](https://github.com/coil-kt/coil), [OkHttp](https://github.com/square/okhttp), [UsbSerial](https://github.com/felHR85/UsbSerial), [Argon2](https://github.com/lambdapioneer/argon2kt), [Lottie](https://github.com/airbnb/lottie-android), etc.
 
 **Libraries used in the Unit Tests:**
 
@@ -58,7 +58,6 @@ TurtlPass Android sends a hash of the user's inputs (App Domain, Account ID, and
 
 * Add support for Browser Apps
 * Read NDEF message ID from an external NFC Tag
-* Hash user inputs with Argon2 instead of SHA-512
 
 
 ## 📦 Lottie Animations

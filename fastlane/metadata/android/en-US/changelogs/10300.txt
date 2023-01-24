@@ -1,0 +1,6 @@
+TurtlPass Android version 1.3.0 is now available for download! This update includes the following:
+
+  - Hash user inputs with Argon2 KDF before sending it over USB serial
+  - Added metadata for F-Droid
+
+Upgrade your online security game with TurtlPass. We hope you continue to enjoy our product and look forward to hearing your feedback and bringing you even more exciting features and improvements in the future. Thank you for choosing the ultimate password solution.

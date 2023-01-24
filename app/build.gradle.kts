@@ -18,8 +18,8 @@ android {
         applicationId = "com.turtlpass"
         minSdk = internal.Android.minSdk
         targetSdk = internal.Android.targetSdk
-        versionCode = 10200
-        versionName = "1.2.0"
+        versionCode = 10300
+        versionName = "1.3.0"
         vectorDrawables { useSupportLibrary = true }
         missingDimensionStrategy("device", "anyDevice")
         buildConfigField("Long", "TIMEOUT_MILLIS", "5000L")
@@ -107,6 +107,7 @@ dependencies {
     }
     internal.Dependencies.security.apply {
         implementation(crypto)
+        implementation(argon2)
     }
     internal.Dependencies.other.apply {
         implementation(appcompat)
