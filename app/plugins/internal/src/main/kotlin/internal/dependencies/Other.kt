@@ -11,6 +11,7 @@ object Other {
     const val lifecycleViewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.lifecycle}"
     const val lifecycleViewModelSavedState = "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.lifecycle}"
     const val lifecycleRuntime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.lifecycle}"
+    const val lifecycleRuntimeCompose = "androidx.lifecycle:lifecycle-runtime-compose:${Versions.lifecycle}"
     const val datastorePreferences = "androidx.datastore:datastore-preferences:1.1.0-alpha01"
     const val preferenceKtx = "androidx.preference:preference-ktx:1.2.0"
     const val timber = "com.jakewharton.timber:timber:${Versions.timber}"

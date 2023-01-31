@@ -9,4 +9,5 @@ data class ChooserInputs(
     var userAccount: UserAccount? = null,
     var storedAccount: UserAccount? = null,
     val pin: String? = null,
+    val passphrase: String? = null,
 )

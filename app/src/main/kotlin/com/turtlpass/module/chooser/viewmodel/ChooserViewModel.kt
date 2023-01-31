@@ -51,14 +51,19 @@ class ChooserViewModel @Inject constructor(
     private val writeUsbSerialUseCase: WriteUsbSerialUseCase,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ChooserUiState(model = ChooserInputs()))
-    val uiState: StateFlow<ChooserUiState> = _uiState.asStateFlow()
+    private val _uiState: MutableStateFlow<ChooserUiState> by lazy {
+        MutableStateFlow(ChooserUiState(model = ChooserInputs()))
+    }
+    val uiState: StateFlow<ChooserUiState> by lazy { _uiState.asStateFlow() }
 
-    private val _permissionState = MutableStateFlow(PermissionState())
-    val permissionState: StateFlow<PermissionState> = _permissionState.asStateFlow()
+    private val _permissionState: MutableStateFlow<PermissionState> by lazy {
+        MutableStateFlow(PermissionState())
+    }
+    val permissionState: StateFlow<PermissionState> by lazy { _permissionState.asStateFlow() }
 
-    private val _usbState = MutableStateFlow(UsbState())
-    val usbState: StateFlow<UsbState> = _usbState.asStateFlow()
+    private val _usbState: MutableStateFlow<UsbState> by lazy { MutableStateFlow(UsbState()) }
+    val usbState: StateFlow<UsbState> by lazy { _usbState.asStateFlow() }
+
 
     init {
         viewModelScope.launch {
@@ -182,6 +187,12 @@ class ChooserViewModel @Inject constructor(
     fun updatePin(pin: List<Int>) {
         _uiState.update { state ->
             state.copy(model = state.model.copy(pin = pin.joinToString(separator = "")))
+        }
+    }
+
+    fun updatePassphrase(passphrase: String) {
+        _uiState.update { state ->
+            state.copy(model = state.model.copy(passphrase = passphrase))
         }
     }
 

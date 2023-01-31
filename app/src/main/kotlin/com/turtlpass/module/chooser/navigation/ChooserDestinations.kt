@@ -1,7 +1,8 @@
-package com.turtlpass.module.chooser
+package com.turtlpass.module.chooser.navigation
 
 enum class ChooserDestination {
-    MainScreen,
+    ScreenMain,
+    ScreenPassphrase,
     SheetApps,
     SheetAccounts,
     SheetPin,

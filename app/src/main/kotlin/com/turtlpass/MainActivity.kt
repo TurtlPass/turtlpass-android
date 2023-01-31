@@ -9,15 +9,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.turtlpass.module.chooser.ui.ChooserScreen
 import com.turtlpass.module.chooser.viewmodel.ChooserViewModel
+import com.turtlpass.module.passphrase.PassphraseViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 
@@ -26,38 +28,52 @@ import kotlinx.coroutines.FlowPreview
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @ExperimentalPermissionsApi
+@ExperimentalLifecycleComposeApi
 @ExperimentalMaterialNavigationApi
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel by viewModels<ChooserViewModel>()
+    private val chooserViewModel by viewModels<ChooserViewModel>()
+    private val passphraseViewModel by viewModels<PassphraseViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen() // handle the splash screen transition
         super.onCreate(savedInstanceState)
+
         setContent {
             val permissions = remember { listOf(GET_ACCOUNTS, READ_CONTACTS) }
             val multiplePermissionsState = rememberMultiplePermissionsState(
                 permissions = permissions,
                 onPermissionsResult = { permissionsResult ->
-                    viewModel.onPermissionsResult(permissions, permissionsResult)
+                    chooserViewModel.onPermissionsResult(permissions, permissionsResult)
                 }
             )
             LaunchedEffect(key1 = multiplePermissionsState) {
-                viewModel.onPermissionEvent(multiplePermissionsState)
+                chooserViewModel.onPermissionEvent(multiplePermissionsState)
             }
             ChooserScreen(
                 window = window,
-                uiState = viewModel.uiState.collectAsState(),
-                usbState = viewModel.usbState.collectAsState(),
-                permissionState = viewModel.permissionState.collectAsState(),
-                onInstalledApp = { app -> viewModel.updateInstalledApp(app) },
-                onRecentApp = { app -> viewModel.selectRecentApp(app) },
-                onUserAccount = { account -> viewModel.updateUserAccount(account) },
-                onStoredAccount = { account -> viewModel.selectStoredAccount(account) },
-                onPinCompleted = { pin -> viewModel.updatePin(pin) },
-                onWriteUsbSerial = { viewModel.writeUsbSerial() },
-                finishApp = { finish() }
+                uiState = chooserViewModel.uiState.collectAsStateWithLifecycle(),
+                usbState = chooserViewModel.usbState.collectAsStateWithLifecycle(),
+                passphraseUiState = passphraseViewModel.uiState.collectAsStateWithLifecycle(),
+                permissionState = chooserViewModel.permissionState.collectAsStateWithLifecycle(),
+                passphraseViewModel = passphraseViewModel,
+                onInstalledApp = { app -> chooserViewModel.updateInstalledApp(app) },
+                onRecentApp = { app -> chooserViewModel.selectRecentApp(app) },
+                onUserAccount = { account -> chooserViewModel.updateUserAccount(account) },
+                onStoredAccount = { account -> chooserViewModel.selectStoredAccount(account) },
+                storePassphrase = { passphrase ->
+                    passphraseViewModel.encryptPassphraseWithBiometric(this, passphrase)
+                },
+                decryptPassphrase = {
+                    passphraseViewModel.decryptPassphraseWithBiometric(this)
+                },
+                onPassphraseDecrypted = { passphrase ->
+                    chooserViewModel.updatePassphrase(passphrase)
+                },
+                onPinCompleted = { pin -> chooserViewModel.updatePin(pin) },
+                onWriteUsbSerial = { chooserViewModel.writeUsbSerial() },
+                finishApp = { finish() },
             )
         }
     }

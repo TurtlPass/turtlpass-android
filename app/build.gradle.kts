@@ -18,8 +18,8 @@ android {
         applicationId = "com.turtlpass"
         minSdk = internal.Android.minSdk
         targetSdk = internal.Android.targetSdk
-        versionCode = 10300
-        versionName = "1.3.0"
+        versionCode = 10400
+        versionName = "1.4.0"
         vectorDrawables { useSupportLibrary = true }
         missingDimensionStrategy("device", "anyDevice")
         buildConfigField("Long", "TIMEOUT_MILLIS", "5000L")
@@ -108,6 +108,7 @@ dependencies {
     internal.Dependencies.security.apply {
         implementation(crypto)
         implementation(argon2)
+        implementation(biometric)
     }
     internal.Dependencies.other.apply {
         implementation(appcompat)
@@ -117,6 +118,7 @@ dependencies {
         implementation(lifecycleViewModelCompose)
         implementation(lifecycleViewModelSavedState)
         implementation(lifecycleRuntime)
+        implementation(lifecycleRuntimeCompose)
         implementation(datastorePreferences)
         implementation(preferenceKtx)
         implementation(timber)

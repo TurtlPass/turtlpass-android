@@ -7,9 +7,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.usb.UsbManager
 import android.view.accessibility.AccessibilityManager
+import androidx.biometric.BiometricManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -37,4 +39,8 @@ object AppModule {
     @Provides
     fun provideAccessibilityManager(context: Context): AccessibilityManager =
         context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+
+    @Provides
+    fun provideBiometricManager(@ApplicationContext context: Context) =
+        BiometricManager.from(context)
 }

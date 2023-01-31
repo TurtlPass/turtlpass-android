@@ -10,4 +10,5 @@ data class ChooserUiState(
     val installedAppsResult: Result<List<InstalledApp>> = Result.Loading,
     val userAccountsResult: Result<List<UserAccount>> = Result.Error(),
     val isAccessibilityServiceEnabled: Boolean = true,
+    val isPassphraseEnabled: Boolean = false,
 )

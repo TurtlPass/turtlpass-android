@@ -1,5 +1,10 @@
 package com.turtlpass.common.domain
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+
 /**
  * A generic class that holds a value with its loading state
  *
@@ -26,10 +31,31 @@ sealed class Result<out R> {
     }
 }
 
-fun <T> Result<T>?.successOr(fallback: T): T {
+val <T> Result<T>.data: T?
+    get() = (this as? Result.Success)?.data
+
+fun <T> Result<T>?.successOrFallback(fallback: T): T {
     if (this == null) return fallback
     return (this as? Result.Success<T>)?.data ?: fallback
 }
 
-val <T> Result<T>.data: T?
-    get() = (this as? Result.Success)?.data
+fun <T> Flow<T>.asResult(): Flow<Result<T>> {
+    return this
+        .map<T, Result<T>> {
+            Result.Success(it)
+        }
+        .onStart { emit(Result.Loading) }
+        .catch { emit(Result.Error(it)) }
+}
+
+internal inline fun <T> Result<T>.switch(
+    success : (T?) -> Unit = {},
+    error : (throwable: Throwable?) -> Unit = {},
+    loading: () -> Unit = {}
+){
+    when(this){
+        is Result.Success -> success(this.data)
+        is Result.Error -> error(this.error)
+        is Result.Loading -> loading()
+    }
+}

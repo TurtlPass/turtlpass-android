@@ -17,13 +17,21 @@ object SharedPreferencesModule {
 
     @Provides
     @Singleton
-    fun provideEncryptedSharedPreferences(@ApplicationContext context: Context): SharedPreferences =
+    fun provideMasterKey(@ApplicationContext context: Context): MasterKey =
+        MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideEncryptedSharedPreferences(
+        @ApplicationContext context: Context,
+        masterKey: MasterKey
+    ): SharedPreferences =
         EncryptedSharedPreferences.create(
             context,
             "preferences.enc",
-            MasterKey.Builder(context)
-                .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-                .build(),
+            masterKey,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )

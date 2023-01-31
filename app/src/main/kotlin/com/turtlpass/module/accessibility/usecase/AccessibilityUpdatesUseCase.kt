@@ -63,19 +63,23 @@ class AccessibilityUpdatesUseCase @Inject constructor(
         context: Context,
         accessibilityService: Class<*>
     ): Boolean {
-        val expectedComponentName = ComponentName(context, accessibilityService)
-        val enabledServicesSetting: String =
-            Settings.Secure.getString(
-                context.contentResolver,
-                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-            )
-                ?: return false
-        val colonSplitter = TextUtils.SimpleStringSplitter(':')
-        colonSplitter.setString(enabledServicesSetting)
-        while (colonSplitter.hasNext()) {
-            val componentNameString: String = colonSplitter.next()
-            val enabledService = ComponentName.unflattenFromString(componentNameString)
-            if (enabledService != null && enabledService == expectedComponentName) return true
+        try {
+            val expectedComponentName = ComponentName(context, accessibilityService)
+            val enabledServicesSetting: String =
+                Settings.Secure.getString(
+                    context.contentResolver,
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+                )
+                    ?: return false
+            val colonSplitter = TextUtils.SimpleStringSplitter(':')
+            colonSplitter.setString(enabledServicesSetting)
+            while (colonSplitter.hasNext()) {
+                val componentNameString: String = colonSplitter.next()
+                val enabledService = ComponentName.unflattenFromString(componentNameString)
+                if (enabledService != null && enabledService == expectedComponentName) return true
+            }
+        } catch (e: Exception) {
+            Timber.e(e)
         }
         return false
     }

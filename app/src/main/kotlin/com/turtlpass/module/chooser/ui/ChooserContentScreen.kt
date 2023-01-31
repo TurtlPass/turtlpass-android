@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -28,17 +29,21 @@ import com.turtlpass.R
 import com.turtlpass.common.compose.button.PrimaryButton
 import com.turtlpass.common.domain.Result
 import com.turtlpass.module.chooser.AccountsPermission
-import com.turtlpass.module.chooser.ChooserDestination
 import com.turtlpass.module.chooser.ChooserUiState
 import com.turtlpass.module.chooser.PermissionState
 import com.turtlpass.module.chooser.UsbPermission
 import com.turtlpass.module.chooser.UsbState
 import com.turtlpass.module.chooser.model.ChooserInputs
+import com.turtlpass.module.chooser.navigation.ChooserDestination
 import com.turtlpass.module.installedapp.model.InstalledApp
+import com.turtlpass.module.passphrase.PassphraseUiState
+import com.turtlpass.module.passphrase.model.PassphraseInput
 import com.turtlpass.module.useraccount.model.UserAccount
 import com.turtlpass.theme.AppTheme
 import com.turtlpass.theme.AppTheme.colors
 import com.turtlpass.theme.AppTheme.dimensions
+import com.turtlpass.theme.icons.Fingerprint
+import com.turtlpass.theme.icons.Security
 
 @ExperimentalPermissionsApi
 @ExperimentalMaterialApi
@@ -48,9 +53,11 @@ fun ChooserContentScreen(
     uiState: State<ChooserUiState>,
     usbState: State<UsbState>,
     permissionState: State<com.turtlpass.module.chooser.PermissionState>,
+    passphraseUiState: State<PassphraseUiState>,
     onRecentApp: (app: InstalledApp) -> Unit,
     onAccountSelected: (account: UserAccount?) -> Unit,
     onStoredAccount: (account: UserAccount) -> Unit,
+    onPassphraseDecrypt: () -> Unit,
     navController: NavHostController,
 ) {
     val focusManager = LocalFocusManager.current
@@ -130,17 +137,28 @@ fun ChooserContentScreen(
                     bottom = dimensions.x16
                 ),
             text = stringResource(R.string.button_unlock),
+            imageVector = if (passphraseUiState.value.isBiometric()) {
+                Icons.Rounded.Fingerprint
+            } else Icons.Rounded.Security,
             enabled = uiState.value.model.installedApp != null
                     && uiState.value.model.userAccount != null,
             onClick = {
                 focusManager.clearFocus()
-                navController.navigate(ChooserDestination.SheetPin.name)
+                if (passphraseUiState.value.isPassphraseNeeded()) {
+                    onPassphraseDecrypt()
+                } else {
+                    navController.navigate(ChooserDestination.SheetPin.name)
+                }
             },
             backgroundColor = colors.default.button
         )
         NotificationsContainer(
             permissionState = permissionState,
             uiState = uiState,
+            passphraseUiState = passphraseUiState,
+            onPassphraseClick = {
+                navController.navigate(ChooserDestination.ScreenPassphrase.name)
+            }
         )
     }
 }
@@ -191,15 +209,20 @@ private fun Preview() {
                 PermissionState(accountsPermission = AccountsPermission.Rationale)
             )
         }
+        val passphraseUiState = remember {
+            mutableStateOf(PassphraseUiState(model = PassphraseInput()))
+        }
         val navController = rememberNavController()
 
         ChooserContentScreen(
             uiState = uiState,
             usbState = usbState,
             permissionState = permissionsState,
+            passphraseUiState = passphraseUiState,
             onAccountSelected = {},
             onStoredAccount = {},
             onRecentApp = {},
+            onPassphraseDecrypt = {},
             navController = navController,
         )
     }

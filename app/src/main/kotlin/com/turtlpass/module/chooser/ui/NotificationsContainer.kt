@@ -27,6 +27,8 @@ import com.turtlpass.module.chooser.UsbPermission
 import com.turtlpass.module.chooser.UsbState
 import com.turtlpass.module.chooser.model.ChooserInputs
 import com.turtlpass.module.installedapp.model.InstalledApp
+import com.turtlpass.module.passphrase.PassphraseUiState
+import com.turtlpass.module.passphrase.model.PassphraseInput
 import com.turtlpass.module.useraccount.model.UserAccount
 import com.turtlpass.theme.AppTheme
 
@@ -36,6 +38,8 @@ fun NotificationsContainer(
     modifier: Modifier = Modifier,
     uiState: State<ChooserUiState>,
     permissionState: State<PermissionState>,
+    passphraseUiState: State<PassphraseUiState>,
+    onPassphraseClick: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -43,6 +47,17 @@ fun NotificationsContainer(
         modifier = modifier
             .verticalScroll(rememberScrollState())
     ) {
+        // Setup Passphrase
+        AnimatedVisibility(
+            visible = passphraseUiState.value.isBiometricAvailable &&
+                    passphraseUiState.value.isPassphraseEnabled.not()
+        ) {
+            ActionCard(
+                text = stringResource(R.string.rationale_passphrase),
+                buttonText = stringResource(R.string.rationale_passphrase_button),
+                onClick = onPassphraseClick,
+            )
+        }
         // Accounts Permission
         AccountsPermissionCard(
             permissionState = permissionState,
@@ -104,10 +119,15 @@ private fun Preview() {
             remember { mutableStateOf(UsbState(usbPermission = UsbPermission.NotGranted)) }
         val permissionsState =
             remember { mutableStateOf(PermissionState(accountsPermission = AccountsPermission.Rationale)) }
+        val passphraseUiState = remember {
+            mutableStateOf(PassphraseUiState(model = PassphraseInput()))
+        }
 
         NotificationsContainer(
             uiState = uiState,
             permissionState = permissionsState,
+            passphraseUiState = passphraseUiState,
+            onPassphraseClick = {},
         )
     }
 }
