@@ -1,7 +1,9 @@
 package com.turtlpass.module.passphrase
 
 import android.os.Build
-import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
+import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -164,17 +166,18 @@ class PassphraseViewModel @Inject constructor(
         negativeButton: String,
     ): BiometricPrompt.PromptInfo {
         return BiometricPrompt.PromptInfo.Builder()
-            .setTitle(title)
-            .setSubtitle(subtitle)
-            .setDescription(description)
             .apply {
+                setTitle(title)
+                setSubtitle(subtitle)
+                setDescription(description)
                 when {
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.R ->
-                        setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+                        setAllowedAuthenticators(BIOMETRIC_STRONG)
                     else -> {
-                        setNegativeButtonText(negativeButton)
+                        setAllowedAuthenticators(BIOMETRIC_WEAK and DEVICE_CREDENTIAL)
                     }
                 }
+                setNegativeButtonText(negativeButton)
             }.build()
     }
 }

@@ -18,8 +18,8 @@ android {
         applicationId = "com.turtlpass"
         minSdk = internal.Android.minSdk
         targetSdk = internal.Android.targetSdk
-        versionCode = 10400
-        versionName = "1.4.0"
+        versionCode = 10401
+        versionName = "1.4.1"
         vectorDrawables { useSupportLibrary = true }
         missingDimensionStrategy("device", "anyDevice")
         buildConfigField("Long", "TIMEOUT_MILLIS", "5000L")
