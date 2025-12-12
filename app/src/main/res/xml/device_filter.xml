@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- CDC driver -->
-    <usb-device vendor-id="11914" /> <!-- 0x2E8A / ......: Raspberry Pi -->
-</resources>

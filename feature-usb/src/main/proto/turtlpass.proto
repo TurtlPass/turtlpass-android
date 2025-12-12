@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package turtlpass;
+
+// ============================================================
+//  ENUMS
+// ============================================================
+
+// Supported commands
+enum CommandType {
+  UNKNOWN = 0;               // Default / invalid command
+  GET_DEVICE_INFO = 1;       // Returns version, seed state, etc.
+  INITIALIZE_SEED = 2;       // Store seed for password derivation
+  GENERATE_PASSWORD = 3;     // Derives a password based on parameters
+  FACTORY_RESET = 4;         // Resets device to default state (no seeds)
+}
+
+// Character set options for password generation
+enum Charset {
+  LETTERS_ONLY = 0;
+  NUMBERS_ONLY = 1;
+  LETTERS_NUMBERS = 2;
+  LETTERS_NUMBERS_SYMBOLS = 3;
+}
+
+// Error codes for responses
+enum ErrorCode {
+  NONE = 0;                  // No error
+  INVALID_COMMAND = 1;
+  INVALID_PARAMS = 2;
+  INVALID_ENTROPY_LENGTH = 3;
+  INVALID_PASSWORD_LENGTH = 4;
+  INVALID_SEED_LENGTH = 5;
+  SEED_NOT_INITIALIZED = 6;
+  PASSWORD_FAILED = 7;
+  PROTO_DECODING_FAILED = 8;
+  PROTO_ENCODING_FAILED = 9;
+  INTERNAL_ERROR = 10;
+}
+
+// ============================================================
+//  MESSAGE TYPES
+// ============================================================
+
+// Parameters for password generation
+message GeneratePasswordParams {
+  bytes entropy = 1;         // Entropy source (1–64 bytes)
+  uint32 length = 2;         // Desired password length (default: 100 chars)
+  Charset charset = 3;       // Character set to use (default: LETTERS_NUMBERS)
+}
+
+// Parameters for initializing the device seed
+message InitializeSeedParams {
+  bytes seed = 1;            // Seed data to store securely in emulated EEPROM
+}
+
+// ============================================================
+//  DEVICE INFO STRUCTURE
+// ============================================================
+
+message DeviceInfo {
+  string turtlpass_version = 1;     // e.g., "3.0.0"
+  string arduino_version = 2;       // e.g., "10810"
+  string compiler_version = 3;      // e.g., "14.3.0"
+  string nanopb_version = 4;        // e.g., "nanopb-1.0.0"
+  string board_name = 5;            // e.g., "pico"
+  bytes unique_board_id = 6;        // 16-byte unique MCU identifier
+}
+
+// ============================================================
+//  COMMAND + RESPONSE WRAPPERS
+// ============================================================
+
+// Main command sent from host to MCU
+message Command {
+  CommandType type = 1;
+
+  oneof parameters {
+    GeneratePasswordParams gen_pass = 2;
+    InitializeSeedParams init_seed = 3;
+  }
+}
+
+// Response sent from MCU to host
+message Response {
+  bool success = 1;             // True if command succeeded
+  ErrorCode error = 2;          // Error code (NONE if success=true)
+  DeviceInfo device_info = 3;   // Structured info for GET_DEVICE_INFO
+  bytes data = 4;               // Optional command-specific data
+}

@@ -8,3 +8,5 @@
 /app/plugins/internal/build/
 /app/plugins/internal/.gradle/
 google-services.json
+/.kotlin
+/feature-accessibility-wip

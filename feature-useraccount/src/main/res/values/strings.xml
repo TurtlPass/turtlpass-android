@@ -1,0 +1,6 @@
+<resources>
+    <string name="feature_useraccount_input_label_account_id">Account ID / Email</string>
+    <string name="feature_useraccount_rationale_title">Permission Required</string>
+    <string name="feature_useraccount_rationale_body">We need access to your accounts to display a list of your accounts.</string>
+    <string name="feature_useraccount_rationale_button_ok">OK</string>
+</resources>

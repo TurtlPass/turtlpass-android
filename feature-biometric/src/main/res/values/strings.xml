@@ -1,0 +1,10 @@
+<resources>
+    <string name="feature_biometric_use_fingerprint">Use your fingerprint to unlock your PIN quickly and securely in the future.</string>
+    <string name="feature_biometric_lock_pin">Protect PIN with Fingerprint</string>
+    <string name="feature_biometric_lock_pin_message">Keep your PIN protected by your fingerprint for future use.</string>
+    <string name="feature_biometric_unlock_pin">Verify Fingerprint</string>
+    <string name="feature_biometric_unlock_pin_message">Unlock your PIN quickly and securely.</string>
+    <string name="feature_biometric_pin_saved">PIN stored securely</string>
+    <string name="feature_biometric_button_save">Save</string>
+    <string name="feature_biometric_button_cancel">Cancel</string>
+</resources>

@@ -1,20 +1,19 @@
-buildscript {
-    val gradleVersion = "7.4.0"
-    val kotlinVersion = "1.8.0" // internal.Versions.ktxCore
-    val hiltVersion = "2.44" // internal.Versions.hiltCore
-
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath("com.android.tools.build:gradle:$gradleVersion")
-        classpath(kotlin("gradle-plugin", version = kotlinVersion))
-        classpath(kotlin("serialization", version = kotlinVersion))
-        classpath("com.google.dagger:hilt-android-gradle-plugin:$hiltVersion")
-        classpath("de.mannodermaus.gradle.plugins:android-junit5:1.8.2.0")
-    }
+plugins {
+    // Define plugins globally, but don’t apply automatically
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.dagger.hilt) apply false
+    alias(libs.plugins.junit5) apply false
+    alias(libs.plugins.protobuf) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.android.kotlin.multiplatform.library) apply false
+    alias(libs.plugins.android.lint) apply false
+    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
+    alias(libs.plugins.androidx.room) apply false
+    alias(libs.plugins.ksp) apply false
 }
 
 allprojects {
@@ -26,5 +25,6 @@ allprojects {
 }
 
 tasks.register("clean", Delete::class) {
+    @Suppress("DEPRECATION")
     delete(rootProject.buildDir)
 }

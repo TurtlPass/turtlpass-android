@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- get accounts list -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!-- get image associated to an email address of a contact -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+</manifest>

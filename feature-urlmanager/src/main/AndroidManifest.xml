@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+
+        <activity
+            android:name="com.turtlpass.urlmanager.share.ShareReceiverActivity"
+            android:exported="true"
+            android:theme="@style/Theme.TransparentActivity.NoSplash">
+
+            <!-- Single item share -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="text/html" />
+                <data android:mimeType="text/x-uri" />
+                <data android:mimeType="text/uri-list" />
+                <data android:mimeType="application/xhtml+xml" />
+                <data android:mimeType="message/rfc822" />
+            </intent-filter>
+
+            <!-- Multiple items share -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="text/html" />
+                <data android:mimeType="text/x-uri" />
+                <data android:mimeType="text/uri-list" />
+                <data android:mimeType="application/xhtml+xml" />
+                <data android:mimeType="message/rfc822" />
+            </intent-filter>
+
+        </activity>
+
+    </application>
+
+</manifest>

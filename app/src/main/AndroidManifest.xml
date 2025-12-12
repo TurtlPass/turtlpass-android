@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.turtlpass">
-
-    <permission
-        android:name="com.turtlpass.ACCESSIBILITY_SERVICE_PERMISSION"
-        android:label="@string/accessibility_service_permission"
-        android:protectionLevel="signature" />
-
-    <!-- get accounts list -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <!-- get image associated to an email address of a contact -->
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <!-- get image associated to an email address of Gravatar API -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- get current/last app being used -->
-    <uses-permission android:name="com.turtlpass.ACCESSIBILITY_SERVICE_PERMISSION" />
-
-    <uses-feature android:name="android.hardware.usb.host" android:required="true" />
-    <uses-feature android:name="android.hardware.fingerprint" android:required="false" />
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:name="com.turtlpass.App"
@@ -26,60 +8,36 @@
         android:fullBackupContent="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:hardwareAccelerated="true"
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
-        android:theme="@style/Theme.App.Starting"
+        android:theme="@style/Theme.App"
         tools:ignore="DataExtractionRules"
         tools:targetApi="s">
 
-        <!-- Main Activity -->
         <activity
-            android:name="com.turtlpass.MainActivity"
+            android:name=".module.main.MainActivity"
+            android:enabled="true"
             android:exported="true"
             android:launchMode="singleTop"
+            android:theme="@style/Theme.App.Starting"
             android:windowSoftInputMode="stateHidden|adjustResize">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
-                android:resource="@xml/device_filter" />
         </activity>
 
-        <!-- Accessibility Service -->
-        <service
-            android:name="com.turtlpass.module.accessibility.service.PackageAccessibilityService"
-            android:enabled="true"
-            android:exported="true"
-            android:label="@string/accessibility_service_permission"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+        <activity
+            android:name=".module.selection.SelectionActivity"
+            android:theme="@style/TransparentActivity"
+            android:launchMode="singleTop"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:exported="true" />
 
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/accessibility_service_config" />
-        </service>
     </application>
-
-    <!-- QUERY_ALL_PACKAGES: https://commonsware.com/R/pages/chap-package-005.html -->
-    <!-- the following query allow the app to list installed apps with share capability -->
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.SEND" />
-            <data android:mimeType="*/*" />
-        </intent>
-    </queries>
 
 </manifest>

@@ -1,32 +1,43 @@
+import java.util.Properties
+val localProps = Properties()
+localProps.load(project.rootProject.file("local.properties").inputStream())
+
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.dagger.hilt)
+    alias(libs.plugins.junit5)
+    alias(libs.plugins.protobuf)
+    alias(libs.plugins.androidx.room)
+    alias(libs.plugins.ksp)
     id("kotlin-parcelize")
-    id("internal")
-    id("de.mannodermaus.android-junit5")
-    id("dagger.hilt.android.plugin")
-    kotlin("plugin.serialization")
-    id("org.jetbrains.kotlin.android")
-    kotlin("kapt")
 }
 
 android {
-    compileSdk = internal.Android.compileSdk
-    buildToolsVersion = internal.Android.buildTools
+    namespace = "com.turtlpass"
+    compileSdk {
+        version = release(36)
+    }
+    buildToolsVersion = "36.0.0"
 
     defaultConfig {
         applicationId = "com.turtlpass"
-        minSdk = internal.Android.minSdk
-        targetSdk = internal.Android.targetSdk
-        versionCode = 10401
-        versionName = "1.4.1"
+        minSdk = 26
+        targetSdk = 36
+        versionCode = 30000
+        versionName = "3.0.0-alpha"
         vectorDrawables { useSupportLibrary = true }
         missingDimensionStrategy("device", "anyDevice")
-        buildConfigField("Long", "TIMEOUT_MILLIS", "5000L")
-        resValue("bool", "uses_clear_text_traffic", "false")
-        resValue("string", "gravatar_base_url", "https://s.gravatar.com")
-        buildConfigField("String", "GRAVATAR_BASE_URL", "\"https://s.gravatar.com\"")
-        buildConfigField("String", "GRAVATAR_PIN_SET", "\"sha256/sSAE6ZWFQvZ1mQB8kh4utc/VpbMVSPQEuedwea9FrtM=\"")
+    }
+    signingConfigs {
+        create("release") {
+            storeFile = file(localProps.getProperty("turtlpassKeystore"))
+            storePassword = localProps.getProperty("turtlpassKeystorePassword")
+            keyAlias = localProps.getProperty("turtlpassKeystoreKeyAlias")
+            keyPassword = localProps.getProperty("turtlpassKeystoreKeyPassword")
+        }
     }
     buildTypes {
         release {
@@ -41,113 +52,89 @@ android {
                     "proguard-rules.pro"
                 )
             }
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = internal.Versions.compose
-    }
-    packagingOptions {
-        resources {
-            excludes.add("META-INF/AL2.0")
-            excludes.add("META-INF/LGPL2.1")
-        }
-    }
-    compileOptions {
-        targetCompatibility = JavaVersion.VERSION_11
-        sourceCompatibility = JavaVersion.VERSION_11
+        buildConfig = true
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
     }
 }
 
-dependencies {
-    internal.Dependencies.kotlin.apply {
-        implementation(jetpackCore)
-        implementation(splashscreen)
-        implementation(kotlinStdlib)
-        implementation(coroutinesAndroid)
-        implementation(serialization)
-    }
-    internal.Dependencies.compose.apply {
-        implementation(material)
-        implementation(material3)
-        implementation(ui)
-        implementation(uiToolingPreview)
-        debugImplementation(uiTooling)
-        implementation(activityCompose)
-        implementation(runtime)
-        implementation(foundation)
-        implementation(foundationLayout)
-        implementation(constraintLayout)
-        implementation(animation)
-        implementation(navigationAnimation)
-        implementation(systemUiController)
-        implementation(permissions)
-        implementation(placeholder)
-        implementation(navigationMaterial)
-        implementation(navigationCompose)
-        implementation(coil)
-        implementation(lottie)
-    }
-    internal.Dependencies.di.apply {
-        implementation(daggerHiltAndroid)
-        kapt(daggerHiltAndroidCompiler)
-        implementation(hiltNavigationCompose)
-        // test
-        androidTestImplementation(daggerHiltAndroidTesting)
-        kaptAndroidTest(daggerHiltAndroidCompiler)
-    }
-    internal.Dependencies.network.apply {
-        implementation(okhttp)
-        implementation(interceptor)
-    }
-    internal.Dependencies.security.apply {
-        implementation(crypto)
-        implementation(argon2)
-        implementation(biometric)
-    }
-    internal.Dependencies.other.apply {
-        implementation(appcompat)
-        implementation(annotation)
-        implementation(material)
-        implementation(lifecycleViewModelKtx)
-        implementation(lifecycleViewModelCompose)
-        implementation(lifecycleViewModelSavedState)
-        implementation(lifecycleRuntime)
-        implementation(lifecycleRuntimeCompose)
-        implementation(datastorePreferences)
-        implementation(preferenceKtx)
-        implementation(timber)
-        implementation(usbSerial)
-        implementation(guava)
-        debugImplementation(leakcanary)
-        debugImplementation(chucker)
-        releaseImplementation(chuckerNoOp)
-    }
-    internal.Dependencies.test.apply {
-        testImplementation(truth)
-        testImplementation(turbine)
-        testImplementation(coreTesting)
-        testImplementation(coroutines)
-        testImplementation(mockitoKotlin)
-        testImplementation(mockk)
-        testImplementation(mockkAgentJvm)
-        // androidTestImplementation(mockkAndroid)
-        // androidTestImplementation(mockkAgentJvm)
-        testImplementation(junit5JupiterApi)
-        testRuntimeOnly(junit5JupiterEngine)
-        testImplementation(junit5JupiterParams)
-        testRuntimeOnly(junit5VintageEngine)
-        // androidTestImplementation(junit5Core)
-        // androidTestRuntimeOnly(junit5Runner)
-        testImplementation(sharedPreferencesMock)
-    }
+kotlin {
+    jvmToolchain(17)
 }
-// Allow references to generated code (Hilt)
-kapt {
-    correctErrorTypes = true
+
+dependencies {
+    // Feature Modules
+    implementation(project(":core-di"))
+    implementation(project(":core-ui"))
+    implementation(project(":core-model"))
+    implementation(project(":core-db"))
+    implementation(project(":core-domain"))
+    implementation(project(":feature-useraccount"))
+    implementation(project(":feature-appmanager"))
+    implementation(project(":feature-urlmanager"))
+    implementation(project(":feature-usb"))
+    implementation(project(":feature-biometric"))
+    implementation(project(":feature-accessibility"))
+    // Core
+    implementation(libs.kotlin.stdlib)
+    implementation(libs.core.ktx)
+    implementation(libs.coroutines.android)
+    implementation(libs.serialization)
+    implementation(libs.splashscreen)
+    // Compose
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
+    implementation(libs.animation.core)
+    debugImplementation(libs.compose.ui.tooling)
+    // Lifecycle
+    implementation(libs.bundles.lifecycle)
+    // AndroidX
+    implementation(libs.bundles.androidX)
+    // Dependency Injection
+    implementation(libs.bundles.hilt)
+    ksp(libs.hilt.compiler)
+    // DB
+    implementation(libs.bundles.db)
+    ksp(libs.androidx.room.compiler)
+    // Protobuf
+    implementation(libs.bundles.protobuf)
+    // Network
+    implementation(libs.bundles.network)
+    // Coil
+    implementation(libs.bundles.coil)
+    // Haze
+    implementation(libs.bundles.haze)
+    // KDF
+    implementation(libs.argon2)
+
+    // Utilities
+    implementation(libs.accompanist.permissions)
+    implementation(libs.compose.placeholder.material)
+    implementation(libs.lottie.compose)
+    implementation(libs.timber)
+    implementation(libs.usb.serial)
+    implementation(libs.guava)
+    debugImplementation(libs.leakcanary)
+    debugImplementation(libs.chucker)
+    releaseImplementation(libs.chucker.noop)
+
+    //# Test dependencies
+    testImplementation(libs.bundles.testUnit)
+    androidTestImplementation(libs.bundles.testAndroid)
+    // hilt
+    kspAndroidTest(libs.hilt.compiler)
+    androidTestImplementation(libs.hilt.testing)
+    // junit5
+    testRuntimeOnly(libs.junit5.engine)
+    testRuntimeOnly(libs.junit5.vintage)
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }

@@ -1,0 +1,249 @@
+##############################
+# Versions
+##############################
+[versions]
+gradle = "8.13.2"
+kotlin = "2.2.21"
+hilt = "2.57.2"
+junit5Plugin = "1.14.0.0"
+protobufPlugin = "0.9.5"
+compose-bom = "2025.12.00"
+jetpackCore = "1.17.0"
+accompanist = "0.37.3"
+lifecycle = "2.10.0"
+serialization = "1.9.0"
+protobuf = "4.33.2"
+room = "2.8.4"
+sqlite = "2.6.2"
+ksp = "2.3.3"
+okhttp = "5.3.2"
+material = "1.13.0"
+timber = "5.0.1"
+mockk = "1.14.7"
+mockito = "5.21.0"
+junit5 = "6.0.1"
+junit = "4.13.2"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+androidxTest = "1.7.0"
+paletteKtx = "1.0.0"
+animationCore = "1.10.0"
+coil = "3.3.0"
+haze = "1.7.1"
+
+
+##############################
+# Plugins
+##############################
+[plugins]
+android-application = { id = "com.android.application", version.ref = "gradle" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+androidx-room = { id = "androidx.room", version.ref = "room" }
+junit5 = { id = "de.mannodermaus.android-junit5", version.ref = "junit5Plugin" }
+android-library = { id = "com.android.library", version.ref = "gradle" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "gradle" }
+android-lint = { id = "com.android.lint", version.ref = "gradle" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+
+##############################
+# Libraries
+##############################
+[libraries]
+
+# Core
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "jetpackCore" }
+splashscreen = { module = "androidx.core:core-splashscreen", version = "1.2.0" }
+coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version = "1.10.2" }
+serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+
+# Compose (managed by BOM)
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-foundation = { module = "androidx.compose.foundation:foundation" }
+compose-foundation-layout = { module = "androidx.compose.foundation:foundation-layout" }
+compose-material = { module = "androidx.compose.material:material" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-material-navigation = { module = "androidx.compose.material:material-navigation" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-animation = { module = "androidx.compose.animation:animation" }
+compose-runtime = { module = "androidx.compose.runtime:runtime" }
+compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+
+# AndroidX core libraries
+activity-compose = { module = "androidx.activity:activity-compose", version = "1.12.1" }
+compose-navigation = { module = "androidx.navigation:navigation-compose", version = "2.9.6" }
+constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version = "1.1.1" }
+appcompat = { module = "androidx.appcompat:appcompat", version = "1.7.1" }
+annotation = { module = "androidx.annotation:annotation", version = "1.9.1" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version = "1.2.0" }
+preference-ktx = { module = "androidx.preference:preference-ktx", version = "1.2.1" }
+
+# Lifecycle
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }
+lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle" }
+lifecycle-service = { module = "androidx.lifecycle:lifecycle-service", version.ref = "lifecycle" }
+
+# Dependency Injection
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version = "1.3.0" }
+hilt-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
+
+# Protobuf
+protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobuf" }
+protobuf-kotlin-lite = { module = "com.google.protobuf:protobuf-kotlin-lite", version.ref = "protobuf" }
+
+# DB
+androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+androidx-room-sqlite-wrapper = { module = "androidx.room:room-sqlite-wrapper", version.ref = "room" }
+
+# Network
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
+
+# Security
+biometric = { module = "androidx.biometric:biometric", version = "1.2.0-alpha05" }
+argon2 = { module = "com.lambdapioneer.argon2kt:argon2kt", version = "1.6.0" }
+
+# Coil
+coil-core = { module = "io.coil-kt.coil3:coil-core", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
+
+# Haze
+haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
+haze-materials = { module = "dev.chrisbanes.haze:haze-materials", version.ref = "haze" }
+haze-android = { module = "dev.chrisbanes.haze:haze-android", version.ref = "haze" }
+
+# Utilities
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
+compose-placeholder-material = { module = "com.eygraber:compose-placeholder-material", version = "1.0.12" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version = "6.7.1" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+usb-serial = { module = "com.github.felHR85:UsbSerial", version = "6.1.0" }
+guava = { module = "com.google.guava:guava", version = "33.5.0-android" }
+leakcanary = { module = "com.squareup.leakcanary:leakcanary-android", version = "2.14" }
+chucker = { module = "com.github.chuckerteam.chucker:library", version = "4.2.0" }
+chucker-noop = { module = "com.github.chuckerteam.chucker:library-no-op", version = "4.2.0" }
+palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "paletteKtx" }
+animation-core = { group = "androidx.compose.animation", name = "animation-core", version.ref = "animationCore" }
+
+# Test dependencies
+truth = { module = "com.google.truth:truth", version = "1.4.5" }
+turbine = { module = "app.cash.turbine:turbine", version = "1.2.1" }
+core-testing = { module = "androidx.arch.core:core-testing", version = "2.2.0" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version = "1.10.2" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version = "6.1.0" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp" }
+junit5-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit5" }
+junit5-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit5" }
+junit5-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit5" }
+junit5-vintage = { module = "org.junit.vintage:junit-vintage-engine", version.ref = "junit5" }
+shared-preferences-mock = { module = "io.github.ivanshafran:shared-preferences-mock", version = "1.2.4" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+runner = { group = "androidx.test", name = "runner", version.ref = "androidxTest" }
+core = { group = "androidx.test", name = "core", version.ref = "androidxTest" }
+
+
+##############################
+# Bundles
+##############################
+[bundles]
+compose = [
+    "compose-ui",
+    "compose-foundation",
+    "compose-foundation-layout",
+    "compose-material",
+    "compose-material3",
+    "compose-material-icons-extended",
+    "compose-material-navigation",
+    "compose-ui-tooling-preview",
+    "compose-animation",
+    "compose-runtime",
+    "compose-navigation",
+    "activity-compose",
+    "constraintlayout-compose"
+]
+lifecycle = [
+    "lifecycle-viewmodel-ktx",
+    "lifecycle-viewmodel-compose",
+    "lifecycle-viewmodel-savedstate",
+    "lifecycle-runtime",
+    "lifecycle-runtime-compose",
+    "lifecycle-service"
+]
+androidX = [
+    "appcompat",
+    "annotation",
+    "material",
+    "datastore-preferences",
+    "preference-ktx"
+]
+hilt = [
+    "hilt-android",
+    "hilt-navigation-compose"
+]
+protobuf = [
+    "protobuf-javalite",
+    "protobuf-kotlin-lite"
+]
+db = [
+    "androidx-sqlite-bundled",
+    "androidx-room-runtime",
+    "androidx-room-sqlite-wrapper",
+]
+network = [
+    "okhttp",
+    "logging-interceptor"
+]
+coil = [
+    "coil-core",
+    "coil-compose",
+    "coil-compose-core",
+    "coil-network-okhttp",
+]
+haze = [
+    "haze",
+    "haze-materials",
+    "haze-android",
+]
+
+# Testing Bundles
+testUnit = [
+    "truth",
+    "turbine",
+    "core-testing",
+    "coroutines-test",
+    "mockk",
+    "mockito-core",
+    "mockito-kotlin",
+    "mockwebserver",
+    "junit5-api",
+    "junit5-params",
+    "shared-preferences-mock",
+]
+testAndroid = [
+    "shared-preferences-mock",
+    "hilt-testing"
+]

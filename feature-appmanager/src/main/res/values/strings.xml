@@ -1,0 +1,7 @@
+<resources>
+    <string name="feature_appmanager_all_apps">All Apps</string>
+    <string name="feature_appmanager_recently_used">Recently Used</string>
+    <string name="feature_appmanager_input_label_filter_app">Search apps…</string>
+    <string name="feature_appmanager_rationale_apps_usage">To show your recently used apps, this app needs usage access. The information is used only for this purpose and is never shared.</string>
+    <string name="feature_appmanager_rationale_apps_usage_button">Allow Usage Access</string>
+</resources>

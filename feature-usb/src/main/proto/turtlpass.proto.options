@@ -1,0 +1,3 @@
+java_package = "com.turtlpass";
+java_multiple_files = true;
+java_outer_classname = "TurtlPassProto";

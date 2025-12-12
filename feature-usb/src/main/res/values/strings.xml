@@ -1,0 +1,12 @@
+<resources>
+    <string name="feature_usb_connect_usb_device">Connect USB Device</string>
+    <string name="feature_usb_authorise_usb_device">Authorise USB Device</string>
+    <string name="feature_usb_connect_usb_device_ready">USB Device Ready</string>
+    <string name="feature_usb_button_authorise">Authorise</string>
+    <string name="feature_usb_button_unlock_now">Unlock Now</string>
+    <string name="feature_usb_connecting">Connecting…</string>
+    <string name="feature_usb_error_try_again">Error! Please Try Again</string>
+    <string name="feature_usb_success_device_ready">Success! Device Ready</string>
+    <string name="feature_usb_close">Close</string>
+    <string name="feature_usb_try_again">Try Again</string>
+</resources>

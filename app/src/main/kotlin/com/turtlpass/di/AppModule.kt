@@ -1,17 +1,12 @@
 package com.turtlpass.di
 
-import android.accounts.AccountManager
 import android.app.Application
-import android.content.ContentResolver
 import android.content.Context
-import android.content.pm.PackageManager
-import android.hardware.usb.UsbManager
-import android.view.accessibility.AccessibilityManager
-import androidx.biometric.BiometricManager
+import com.turtlpass.di.moduleNavigation.ActivityClass
+import com.turtlpass.module.moduleNavigation.buildActivityClassList
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -23,24 +18,7 @@ object AppModule {
     @Singleton
     fun provideContext(application: Application): Context = application.applicationContext
 
+    @Singleton
     @Provides
-    fun providePackageManager(context: Context): PackageManager = context.packageManager
-
-    @Provides
-    fun provideContentResolver(context: Context): ContentResolver = context.contentResolver
-
-    @Provides
-    fun provideAccountManager(context: Context): AccountManager = AccountManager.get(context)
-
-    @Provides
-    fun provideUsbManager(context: Context): UsbManager =
-        context.getSystemService(Context.USB_SERVICE) as UsbManager
-
-    @Provides
-    fun provideAccessibilityManager(context: Context): AccessibilityManager =
-        context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-
-    @Provides
-    fun provideBiometricManager(@ApplicationContext context: Context) =
-        BiometricManager.from(context)
+    fun provideActivityClassList(): List<ActivityClass> = buildActivityClassList()
 }

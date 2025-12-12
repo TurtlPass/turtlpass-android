@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TurtlPass device -->
+    <usb-device vendor-id="0x1209" product-id="0xFA55" />
+</resources>

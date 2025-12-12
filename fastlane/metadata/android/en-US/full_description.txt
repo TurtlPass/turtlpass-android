@@ -1,7 +1,0 @@
-With TurtlPass, you can easily and securely generate unique passwords for all of your accounts. Using the Android client app (or the Chrome Extension) select the App (or Domain) you want to generate a password for, enter your Account ID, and choose a PIN. A hash of the inputs are sent via USB serial to the TurtlPass device that then uses a deterministic key derivation function (HKDF) to generate a 100-character password that includes a combination of lowercase and uppercase letters, as well as numbers.
-
-For added security, TurtlPass uses a seed stored in flash memory to generate your passwords. And to protect against possible attack vectors, the generated password is not transmitted back via USB. Instead, it is typed by emulating an external keyboard when you click the physical button on the TurtlPass firmware device.
-
-To use TurtlPass, you’ll need a widely available RP2040 microcontroller flashed with TurtlPass Firmware. Then simply connect the device to your phone/computer via USB and start generating strong, unique passwords today.
-
-You can check the source code here: https://github.com/TurtlPass/turtlpass-android

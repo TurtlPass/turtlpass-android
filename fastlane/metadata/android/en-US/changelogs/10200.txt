@@ -1,7 +1,0 @@
-TurtlPass Android version 1.2.0 is now available for download! This update includes the following:
-
-  - Automatically launch the app when a TurtlPass device is connected
-  - Address connection and permission issues for previously connected USB devices upon opening the app
-  - Include a checkbox option to retain USB permission settings across multiple sessions
-
-Upgrade your online security game with TurtlPass. We hope you continue to enjoy our product and look forward to hearing your feedback and bringing you even more exciting features and improvements in the future. Thank you for choosing the ultimate password solution.

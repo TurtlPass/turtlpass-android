@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+
+    <!-- Base config applies to all connections unless overridden -->
+    <base-config cleartextTrafficPermitted="@bool/uses_clear_text_traffic">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Override only the listed domains -->
+    <domain-config cleartextTrafficPermitted="@bool/uses_clear_text_traffic">
+        <domain includeSubdomains="true">@string/gravatar_base_url</domain>
+        <domain includeSubdomains="true">@string/avatar_base_url</domain>
+        <domain includeSubdomains="true">@string/google_base_url</domain>
+        <domain includeSubdomains="true">@string/gstatic_base_url</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+
+</network-security-config>

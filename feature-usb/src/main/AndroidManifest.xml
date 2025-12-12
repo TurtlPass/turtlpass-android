@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature android:name="android.hardware.usb.host" android:required="true" />
+
+    <application>
+
+        <activity android:name="com.turtlpass.usb.intent.UsbIntentActivity"
+            android:theme="@style/TransparentActivity"
+            android:exported="true"
+            android:noHistory="true"
+            android:launchMode="standard">
+
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/device_filter" />
+        </activity>
+
+        <receiver
+            android:name="com.turtlpass.usb.receiver.UsbPermissionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.turtlpass.USB_PERMISSION" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+
+</manifest>

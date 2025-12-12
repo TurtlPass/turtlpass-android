@@ -1,0 +1,4 @@
+<resources>
+    <string name="feature_accessibility_permission">TurtlPass</string>
+    <string name="feature_accessibility_permission_desc">Accessibility access is required to display your recent websites.</string>
+</resources>

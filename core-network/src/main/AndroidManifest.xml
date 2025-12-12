@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+        networkSecurityConfig is defined in core-network so that all feature modules
+        automatically inherit the same security policy.
+
+        Why this is important:
+        - Controls whether cleartext (HTTP) traffic is allowed.
+        - Defines which certificate authorities are trusted.
+        - Restricts which domains the app can connect to.
+        - Ensures consistent TLS behavior across debug and release builds.
+        - Works together with OkHttp certificate pinning for enhanced security.
+
+        By declaring it here in the library manifest, we avoid duplicating this
+        configuration in every module and ensure a single, centralized security policy.
+    -->
+    <application android:networkSecurityConfig="@xml/network_security_config" />
+
+</manifest>
