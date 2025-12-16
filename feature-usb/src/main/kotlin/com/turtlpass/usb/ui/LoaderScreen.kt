@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,6 +43,7 @@ import com.turtlpass.usb.R
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun LoaderScreen(
+    modifier: Modifier = Modifier,
     loaderType: LoaderType,
     onClick: ((LoaderType) -> Unit),
 ) {
@@ -63,12 +65,11 @@ fun LoaderScreen(
     )
 
     Column(
-        modifier = Modifier
-            .wrapContentHeight()
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = dimensions.x32),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
+        verticalArrangement = Arrangement.Center
     ) {
         LottieAnimation(
             modifier = Modifier
@@ -159,6 +160,8 @@ private fun Preview(
 ) {
     AppTheme {
         LoaderScreen(
+            modifier = Modifier.fillMaxHeight(),
+//            modifier = Modifier.wrapContentHeight(),
             loaderType = item,
             onClick = {}
         )

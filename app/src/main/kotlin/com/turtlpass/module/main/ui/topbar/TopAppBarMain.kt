@@ -19,14 +19,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.turtlpass.R
 import com.turtlpass.ui.theme.AppTheme
+import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.ui.theme.AppTheme.dimensions
 import com.turtlpass.ui.theme.AppTheme.typography
 import com.turtlpass.useraccount.ui.UserAccountImage
@@ -36,7 +38,6 @@ import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState
-
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalHazeMaterialsApi::class)
 @Composable
@@ -48,32 +49,10 @@ fun TopAppBarMain(
 ) {
     TopAppBar(
         modifier = Modifier
-            // top haze
             .hazeEffect(
                 state = hazeState,
-                style = HazeMaterials.ultraThin(containerColor = Color.White)
-            ) {
-//                progressive = HazeProgressive.verticalGradient(
-//                    startIntensity = 1f, // fully opaque at top
-//                    endIntensity = 0f,   // fully transparent at bottom
-//                    preferPerformance = true
-//                )
-            },
-            // subtle gradient to fade items into haze
-//            .drawBehind {
-//                val gradientHeightPx = 40.dp.toPx()
-//                drawRect(
-//                    brush = Brush.verticalGradient(
-//                        colors = listOf(
-//                            Color.White.copy(alpha = 0.2f), // subtle fade
-//                            Color.Transparent
-//                        ),
-//                        startY = 0f,
-//                        endY = gradientHeightPx
-//                    ),
-//                    size = Size(size.width, gradientHeightPx)
-//                )
-//            },
+                style = HazeMaterials.ultraThin(containerColor = colors.default.background)
+            ),
         scrollBehavior = scrollBehavior,
         windowInsets = WindowInsets(
             top = 0.dp,   // ignore status bar inset
@@ -84,24 +63,24 @@ fun TopAppBarMain(
         title = {
             Text(
                 modifier = Modifier
-                    .padding(start = 4.dp),
+                    .padding(start = dimensions.x4),
                 text = stringResource(R.string.app_name),
                 style = typography.logo,
             )
         },
         navigationIcon = {
             Image(
-                painter = painterResource(id = R.drawable.turtlpass),
-                contentDescription = "TurtlPass Icon",
+                imageVector = ImageVector.vectorResource(id = R.drawable.vector_turtlpass),
+                contentDescription = "TurtlPass Logo",
                 modifier = Modifier
-                    .padding(start = 10.dp)
+                    .padding(start = dimensions.x8 + dimensions.x4)
                     .size(dimensions.x32 + dimensions.x2)
             )
         },
         actions = {
             IconButton(
                 modifier = Modifier
-                    .padding(end = 4.5.dp),
+                    .padding(end = dimensions.x4 + 0.5.dp),
                 onClick = onAccountPickerRequested
             ) {
                 UserAccountImage(
@@ -114,8 +93,6 @@ fun TopAppBarMain(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,
             scrolledContainerColor = Color.Transparent,
-//            containerColor = colors.default.background,
-//            scrolledContainerColor = colors.default.background,
             titleContentColor = MaterialTheme.colorScheme.onPrimary
         ),
     )

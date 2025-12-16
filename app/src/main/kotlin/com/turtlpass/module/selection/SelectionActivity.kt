@@ -1,6 +1,5 @@
 package com.turtlpass.module.selection
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -13,10 +12,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.turtlpass.appmanager.viewmodel.AppManagerViewModel
 import com.turtlpass.biometric.R
 import com.turtlpass.biometric.viewmodel.BiometricAction
 import com.turtlpass.biometric.viewmodel.BiometricUiEvent
@@ -61,10 +58,6 @@ class SelectionActivity : AppCompatActivity() {
     private val usbViewModel by viewModels<UsbViewModel>()
 
 
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -74,7 +67,6 @@ class SelectionActivity : AppCompatActivity() {
         setContent {
             AppTheme {
                 val navController = rememberNavController()
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val selectionUiState by selectionViewModel.uiState.collectAsStateWithLifecycle()
                 val usbState = selectionViewModel.usbUiState.collectAsStateWithLifecycle()
 
@@ -161,7 +153,6 @@ class SelectionActivity : AppCompatActivity() {
 
                 SelectionScreen(
                     navController = navController,
-                    navBackStackEntry = navBackStackEntry,
                     selectionUiState = selectionViewModel.uiState.collectAsStateWithLifecycle(),
                     userAccountUiState = userAccountViewModel.uiState.collectAsStateWithLifecycle(),
                     biometricUiState = biometricViewModel.uiState.collectAsStateWithLifecycle(),

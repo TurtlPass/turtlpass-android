@@ -9,7 +9,9 @@
             android:theme="@style/TransparentActivity"
             android:exported="true"
             android:noHistory="true"
-            android:launchMode="standard">
+            android:launchMode="singleTask"
+            android:taskAffinity="com.turtlpass.usb.intent"
+            android:excludeFromRecents="true">
 
             <intent-filter>
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />

@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -19,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.ui.theme.AppTheme.dimensions
+import com.turtlpass.ui.theme.appIndication
 
 @Composable
 fun UrlItemLayout(
@@ -44,7 +44,7 @@ fun UrlItemLayout(
                     if (onClick != null)
                         Modifier.clickable(
                             interactionSource = remember { MutableInteractionSource() },
-                            indication = ripple(),
+                            indication = appIndication(),
                             onClick = onClick
                         )
                     else Modifier

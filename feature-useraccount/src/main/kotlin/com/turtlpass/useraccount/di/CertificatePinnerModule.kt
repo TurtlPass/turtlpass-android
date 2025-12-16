@@ -15,10 +15,10 @@ object CertificatePinnerModule {
     @Provides
     @IntoSet
     fun provideGravatarPin(): HostCertificatePinner =
-        HostCertificatePinner(BuildConfig.GRAVATAR_HOST, BuildConfig.GRAVATAR_PIN_SET)
+        HostCertificatePinner(BuildConfig.GRAVATAR_HOST, BuildConfig.GRAVATAR_SPKI_PIN)
 
     @Provides
     @IntoSet
     fun provideLiaraPin(): HostCertificatePinner =
-        HostCertificatePinner(BuildConfig.AVATAR_LIARA_HOST, BuildConfig.AVATAR_LIARA_PIN_SET)
+        HostCertificatePinner(BuildConfig.AVATAR_LIARA_HOST, BuildConfig.AVATAR_LIARA_SPKI_PIN)
 }

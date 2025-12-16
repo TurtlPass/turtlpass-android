@@ -15,7 +15,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import timber.log.Timber
 
 @OptIn(
     FlowPreview::class,
@@ -43,10 +42,12 @@ class UsbIntentActivity : AppCompatActivity() {
 
         when (viewModel.decideUsbIntent()) {
             is UsbIntentDecision.LaunchSelection -> {
-                Timber.e("UsbIntentDecision.LaunchSelection")
-
                 moduleNavigation.buildIntent(this, ActivityLabel.SelectionActivity)?.apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    addFlags(
+                        Intent.FLAG_ACTIVITY_NEW_TASK or
+                                Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                Intent.FLAG_ACTIVITY_NO_ANIMATION
+                    )
                     putExtra(EXTRA_IS_USB_INTENT, true)
                 }.also { intent ->
                     startActivity(intent)
@@ -54,18 +55,14 @@ class UsbIntentActivity : AppCompatActivity() {
             }
 
             is UsbIntentDecision.LaunchMain -> {
-                Timber.e("UsbIntentDecision.LaunchMain")
-
                 moduleNavigation.buildIntent(this, ActivityLabel.MainActivity)?.apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }.also { intent ->
                     startActivity(intent)
                 }
             }
 
-            is UsbIntentDecision.Finish -> {
-                Timber.e("UsbIntentDecision.Finish")
-            }
+            is UsbIntentDecision.Finish -> {}
         }
         finish()
     }

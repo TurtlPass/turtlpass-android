@@ -14,7 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
@@ -23,6 +23,7 @@ import com.turtlpass.ui.icons.DeleteForever24Px
 import com.turtlpass.ui.icons.MoreVert24Px
 import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.ui.theme.AppTheme.typography
+import com.turtlpass.urlmanager.R
 
 @Composable
 fun IconContextMenu(
@@ -34,7 +35,8 @@ fun IconContextMenu(
         IconButton(onClick = { expanded = true }) {
             Icon(
                 imageVector = MoreVert24Px,
-                contentDescription = "Menu"
+                contentDescription = "Menu",
+                tint = colors.text.primary
             )
         }
         DropdownMenu(
@@ -53,18 +55,18 @@ fun IconContextMenu(
                 leadingIcon = {
                     Icon(
                         imageVector = DeleteForever24Px,
-                        contentDescription = "Delete All",
-                        tint = Color.Red.copy(alpha = 0.85f),
+                        contentDescription = stringResource(R.string.feature_urlmanager_delete_all),
+                        tint = colors.default.destructive,
                     )
                 },
                 text = {
                     Text(
                         modifier = Modifier.padding(end = 8.dp),
-                        text = "Delete All",
+                        text = stringResource(R.string.feature_urlmanager_delete_all),
                         style = typography.h3.copy(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.Red.copy(alpha = 0.85f),
+                            color = colors.default.destructive,
                         ),
                     )
                 }

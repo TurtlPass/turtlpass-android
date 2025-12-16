@@ -22,7 +22,6 @@ import com.turtlpass.module.selection.model.SelectedApp
 import com.turtlpass.module.selection.model.SelectedWebDomain
 import com.turtlpass.module.selection.model.SelectionInput
 import com.turtlpass.module.selection.model.SelectionUiState
-import com.turtlpass.urlmanager.extension.faviconUrl
 import com.turtlpass.urlmanager.usecase.BuildWebsiteUiUseCase
 import com.turtlpass.urlmanager.usecase.UpdateWebsiteUiUseCase
 import com.turtlpass.usb.model.UsbUiState
@@ -115,16 +114,13 @@ class SelectionViewModel @Inject constructor(
             is ObservedAccessibilityEvent.AppEvent -> {
                 // Last event was an app
                 when {
-//                    lastEvent.packageName == "com.turtlpass" -> {
-////                        finish()
-//                    }
                     isBrowserApp(lastEvent.packageName) -> {
                         accessibilityEventBus.lastUrl.value?.let { lastUrl ->
                             if (lastUrl.packageName == lastEvent.packageName) {
                                 selectProductType(ProductTypeUi.Website)
                                 updateBrowserState(lastUrl)
-                            }//todo else finish()
-                        }//todo else finish()
+                            }
+                        }
                     }
 
                     else -> {
@@ -148,18 +144,9 @@ class SelectionViewModel @Inject constructor(
     }
 
     private fun SelectionViewModel.handleUsbIntentFallback() {
-//        val foregroundPackageName =
-//            intent.getStringExtra(SelectionActivity.EXTRA_PACKAGE_NAME)
-//        if (!foregroundPackageName.isNullOrEmpty()) {
-//            selectProductType(ProductTypeUi.Application)
-//            updateInstalledApp(foregroundPackageName)
-//        } else {
-//
-//        }
         recentAppsUsageProvider.getMostRecentApp()?.packageName?.let { packageName ->
             selectProductType(ProductTypeUi.Application)
             updateInstalledApp(packageName)
-//            appManagerViewModel.updateInstalledApp(packageName)
         }
     }
 

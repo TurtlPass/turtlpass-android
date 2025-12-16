@@ -92,7 +92,6 @@ fun MainScreen(
 
     val hazeState = rememberHazeState()
     val topAppBarState = rememberTopAppBarState()
-//    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
         state = topAppBarState,
         snapAnimationSpec = spring(stiffness = Spring.StiffnessHigh)
@@ -242,16 +241,6 @@ private fun Preview() {
     AppTheme {
         MainScreen(
             navController = rememberNavController(),
-//            uiState = remember {
-//                mutableStateOf(
-//                    ChooserUiState(
-//                        model = ChooserInputs(),
-////                        model = ChooserInputs(customInput = "turtlpass"),
-////                        isUsageAccessAllowed = true,
-//                        isAccessibilityServiceEnabled = true,
-//                    )
-//                )
-//            },
             userAccountUiState = remember { mutableStateOf(UserAccountUiState()) },
             appManagerUiState = remember { mutableStateOf(AppManagerUiState()) },
             urlManagerUiState = remember {

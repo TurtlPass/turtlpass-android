@@ -191,8 +191,8 @@ private fun BoxScope.BackgroundActionDelete(
                 .width(maxReveal + 16.dp)
                 .fillMaxHeight()
                 .background(
-                    Color.Red,
-                    RoundedCornerShape(
+                    color = Color.Red,
+                    shape = RoundedCornerShape(
                         topEnd = dimensions.cornerRadius,
                         bottomEnd = dimensions.cornerRadius
                     )

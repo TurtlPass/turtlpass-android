@@ -15,10 +15,10 @@ object CertificatePinnerModule {
     @Provides
     @IntoSet
     fun provideGooglePin(): HostCertificatePinner =
-        HostCertificatePinner(BuildConfig.GOOGLE_HOST, BuildConfig.GOOGLE_PIN_SET)
+        HostCertificatePinner(BuildConfig.GOOGLE_HOST, BuildConfig.GOOGLE_SPKI_PIN)
 
     @Provides
     @IntoSet
     fun provideGstaticPin(): HostCertificatePinner = // wildcard for subdomains
-        HostCertificatePinner("*${BuildConfig.GSTATIC_HOST}", BuildConfig.GSTATIC_PIN_SET)
+        HostCertificatePinner("*${BuildConfig.GSTATIC_HOST}", BuildConfig.GSTATIC_SPKI_PIN)
 }

@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -49,6 +50,7 @@ import com.turtlpass.usb.model.UsbUiState
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ConnectUsbScreen(
+    modifier: Modifier = Modifier,
     usbUiState: State<UsbUiState>,
     onReadyClick: () -> Unit,
 ) {
@@ -56,15 +58,14 @@ fun ConnectUsbScreen(
         spec = LottieCompositionSpec.Asset("lottie_usb_stick.json")
     )
     Column(
-        modifier = Modifier
-            .wrapContentHeight()
+        modifier = modifier
             .fillMaxWidth()
             .padding(
                 top = dimensions.x16,
                 bottom = dimensions.x32
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround
+        verticalArrangement = Arrangement.Center
     ) {
         LottieAnimation(
             modifier = Modifier
@@ -138,7 +139,7 @@ fun ColumnScope.AnimatedButton(
 }
 
 private class UsbPermissionProvider : PreviewParameterProvider<UsbPermission> {
-    override val values = sequenceOf( UsbPermission.NotGranted, UsbPermission.Granted)
+    override val values = sequenceOf(UsbPermission.NotGranted, UsbPermission.Granted)
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -163,10 +164,17 @@ private fun Preview(
     @PreviewParameter(UsbPermissionProvider::class) item: UsbPermission
 ) {
     AppTheme {
-        val usbUiState = remember { mutableStateOf(UsbUiState(usbPermission = item)) }
-
         ConnectUsbScreen(
-            usbUiState = usbUiState,
+            modifier = Modifier.fillMaxHeight(),
+//            modifier = Modifier.wrapContentHeight(),
+            usbUiState = remember {
+                mutableStateOf(
+                    UsbUiState(
+                        isUsbConnected = true,
+                        usbPermission = item
+                    )
+                )
+            },
             onReadyClick = {},
         )
     }

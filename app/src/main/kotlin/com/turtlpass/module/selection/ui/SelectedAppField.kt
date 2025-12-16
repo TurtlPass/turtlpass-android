@@ -15,11 +15,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.turtlpass.R
 import com.turtlpass.appmanager.model.InstalledAppUi
 import com.turtlpass.appmanager.ui.InstalledAppImage
 import com.turtlpass.module.selection.model.SelectionInput
@@ -43,17 +44,17 @@ fun SelectedAppField(
             modifier = modifier,
             leadingIcon = {
                 InstalledAppImage(
-                    modifier = Modifier.requiredSize(28.dp),
+                    modifier = Modifier.requiredSize(dimensions.iconFieldSize),
                     installedApp = selectionUiState.value.model.selectedApp,
                     showShimmer = false
                 )
             },
             label = {
                 Text(
-                    text = "Application",
+                    text = stringResource(R.string.application),
                     color = colors.text.body,
                     style = typography.title.copy(
-                        fontSize = 14.sp //else 16.sp
+                        fontSize = 14.sp
                     ),
                 )
             },

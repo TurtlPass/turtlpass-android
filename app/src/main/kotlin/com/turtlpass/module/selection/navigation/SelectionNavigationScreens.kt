@@ -1,9 +1,13 @@
 package com.turtlpass.module.selection.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -42,12 +46,11 @@ fun SelectionNavigationScreens(
     title: @Composable () -> String = { "" },
     onAccountPickerRequested: () -> Unit,
     onUserAccount: (account: UserAccount?) -> Unit,
-    onClose: () -> Unit = {},
     popBackStack: () -> Unit,
     onPinCompleted: (pin: List<Int>, enableFingerprint: Boolean) -> Unit,
     onFingerprint: () -> Unit,
     onWriteUsbSerial: () -> Unit,
-    finishApp: () -> Unit,
+    finish: () -> Unit,
 ) {
     NavHost(navController, startDestination = NavigationDeviceItem.Selection.route) {
         deviceDestination(mode = flowMode, route = NavigationDeviceItem.Selection.route) {
@@ -55,11 +58,12 @@ fun SelectionNavigationScreens(
                 mode = flowMode,
                 usbUiState = usbUiState,
             ) {
+                BackHandler { finish() }
                 SelectedInputsScreen(
                     selectionUiState = selectionUiState,
                     userAccountUiState = userAccountUiState,
                     onUserAccount = onUserAccount,
-                    onCancel = onClose,
+                    onCancel = finish,
                     onNavigateUserAccounts = onAccountPickerRequested,
                     onGetPassword = {
                         if (biometricUiState.value.isBiometricAvailable
@@ -91,10 +95,13 @@ fun SelectionNavigationScreens(
             DeviceScreenContainer(
                 mode = flowMode,
                 usbUiState = usbUiState,
-                onCancel = onClose,
+                onCancel = finish,
                 title = title()
             ) {
+                BackHandler { finish() }
                 UserPinScreen(
+                    modifier = if (flowMode == DeviceFlowMode.FullScreen) Modifier.fillMaxHeight()
+                    else Modifier.wrapContentHeight(),
                     biometricUiState = biometricUiState,
                     onPinCompleted = { pin, enableFingerprint ->
                         onPinCompleted(pin, enableFingerprint)
@@ -107,10 +114,13 @@ fun SelectionNavigationScreens(
             DeviceScreenContainer(
                 mode = flowMode,
                 usbUiState = usbUiState,
-                onCancel = onClose,
+                onCancel = finish,
                 title = title()
             ) {
+                BackHandler { finish() }
                 ConnectUsbScreen(
+                    modifier = if (flowMode == DeviceFlowMode.FullScreen) Modifier.fillMaxHeight()
+                    else Modifier.wrapContentHeight(),
                     usbUiState = usbUiState,
                     onReadyClick = {
                         navController.navigate(NavigationDeviceItem.Loader.route)
@@ -123,19 +133,18 @@ fun SelectionNavigationScreens(
             DeviceScreenContainer(
                 mode = flowMode,
                 usbUiState = usbUiState,
-                onCancel = onClose,
+                onCancel = finish,
                 title = title()
             ) {
+                BackHandler { finish() }
                 LoaderScreen(
+                    modifier = if (flowMode == DeviceFlowMode.FullScreen) Modifier.fillMaxHeight()
+                    else Modifier.wrapContentHeight(),
                     loaderType = uiState.value.loaderType,
                     onClick = { state ->
                         when (state) {
-                            LoaderType.Success -> {
-                                popBackStack()
-                                finishApp()
-                            }
-
-                            LoaderType.Error -> onWriteUsbSerial() // retry
+                            LoaderType.Success -> finish()
+                            LoaderType.Error -> onWriteUsbSerial() // onRetry
                             else -> {}
                         }
                     }

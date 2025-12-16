@@ -55,6 +55,10 @@ dependencies {
     // DB
     implementation(libs.bundles.db)
     ksp(libs.androidx.room.compiler)
+    //noinspection UseTomlInstead
+    implementation("net.zetetic:sqlcipher-android:4.12.0@aar")
+    // Utilities
+    implementation(libs.timber)
 }
 
 room {

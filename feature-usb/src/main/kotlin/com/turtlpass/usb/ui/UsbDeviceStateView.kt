@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -56,7 +57,8 @@ fun UsbDeviceStateView(usbDeviceUiState: UsbDeviceUiState, backgroundColor: Colo
                 }
             },
             style = typography.subtitle.copy(
-                color = Color.White
+                color = Color.White,
+                fontWeight = FontWeight.Normal,
             ),
         )
         Icon(
@@ -66,7 +68,6 @@ fun UsbDeviceStateView(usbDeviceUiState: UsbDeviceUiState, backgroundColor: Colo
                 UsbDeviceUiState.MissingPermission -> KeyVertical24Px
             },
             modifier = Modifier
-//                .padding(bottom = 0.5.dp)
                 .size(12.dp),
             contentDescription = null,
             tint = Color.White

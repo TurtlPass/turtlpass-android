@@ -16,7 +16,6 @@ import com.turtlpass.ui.anim.shimmerOverContent
 import com.turtlpass.ui.icons.Turtlpass24Px
 import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.ui.theme.AppTheme.dimensions
-import com.turtlpass.ui.theme.Grey200
 
 @Composable
 fun InstalledAppAdaptiveDrawableSkeleton(
@@ -29,7 +28,7 @@ fun InstalledAppAdaptiveDrawableSkeleton(
             .clip(RoundedCornerShape(dimensions.cornerRadius))
             .border(
                 width = 1.dp,
-                color = Grey200,
+                color = colors.default.border,
                 shape = RoundedCornerShape(dimensions.cornerRadius),
             )
             .background(colors.default.placeholder)
@@ -42,7 +41,7 @@ fun InstalledAppAdaptiveDrawableSkeleton(
             modifier = Modifier.size(64.dp),
             imageVector = Turtlpass24Px,
             contentDescription = null,
-            tint = Grey200,
+            tint = colors.default.border,
         )
     }
 }

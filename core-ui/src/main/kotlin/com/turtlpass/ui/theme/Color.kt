@@ -25,7 +25,6 @@ val Grey200 = Color(0xffe2e5e9)
 val Grey300 = Color(0xff9ca5af)
 val Grey400 = Color(0xff6c757f)
 val Grey500 = Color(0xff4d5660)
-val Aquamarine = Color(0xff8faff2)
 
 
 fun Color.disabledColor(enabled: Boolean): Color {
@@ -58,21 +57,21 @@ data class AppColors(
         val scrim by ColorBox(light = Color.Transparent, dark = Color.Transparent)
         val input by ColorBox(light = MintCream, dark = RaisinBlack)
         val unfocused by ColorBox(light = MagicMint, dark = Color.White)
-//        val unfocused by ColorBox(light = MintCream, dark = Color.White)
         val accent by ColorBox(light = Zomp, dark = Zomp)
         val button by ColorBox(light = Zomp, dark = Zomp)
         val buttonText by ColorBox(light = Color.White, dark = Color.White)
         val text by ColorBox(light = RaisinBlack, dark = Color.White)
-        val placeholder by ColorBox(light = Grey100, dark = Grey100)
+        val placeholder by ColorBox(light = Grey100, dark = Grey400)
         val placeholderHighlight by ColorBox(light = Grey200, dark = Grey200)
-        val icon by ColorBox(light = Grey300, dark = Grey300)
+        val icon by ColorBox(light = Grey300, dark = Color.White)
         val dragHandle by ColorBox(light = Grey200, dark = Grey200)
-        val border by ColorBox(light = Grey200, dark = MintCream)
+        val border by ColorBox(light = Grey200, dark = Grey400)
+        val destructive by ColorBox(light = Color.Red.copy(alpha = 0.85f), dark = Color.Red)
         val error by ColorBox(light = Cooper, dark = Cooper)
     }
 
     inner class Text internal constructor() : ColorContainer by this {
-        val primary by ColorBox(light = Zomp, dark = Zomp)
+        val primary by ColorBox(light = RaisinBlack, dark = Color.White)
         val input by ColorBox(light = Grey200, dark = Color.White)
         val logo by ColorBox(light = Zomp, dark = Zomp)
         val title by ColorBox(light = Grey500, dark = Color.White)

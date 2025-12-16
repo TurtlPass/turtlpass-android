@@ -2,4 +2,7 @@
     <string name="app_name">TurtlPass</string>
     <string name="screen_selection_button_unlock">Get Password</string>
     <string name="title_enter_pin">Enter your PIN</string>
+    <string name="application">Application</string>
+    <string name="website">Website</string>
+    <string name="cancel">Cancel</string>
 </resources>

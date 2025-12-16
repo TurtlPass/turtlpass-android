@@ -6,11 +6,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -84,21 +81,21 @@ fun rememberPermissionRequester(
         }
     }
 
-    // Observe permissions after returning from Settings
-    LaunchedEffect(lifecycleOwner) {
+    // Observe permissions after returning from system dialog
+    /*LaunchedEffect(lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             snapshotFlow { permissionState.allPermissionsGranted }
                 .collect { granted ->
                     if (granted && userRequested) {
-                        onPermissionsGranted()
+                        userRequested = false
                         requestInProgress = false
                         showRationale = false
                         dismissedDialog = false
-                        userRequested = false
+                        onPermissionsGranted()
                     }
                 }
         }
-    }
+    }*/
 
     // Rationale dialog
     if (showRationale && rationaleContent != null) {

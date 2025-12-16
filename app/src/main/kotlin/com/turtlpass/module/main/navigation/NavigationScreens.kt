@@ -1,12 +1,14 @@
 package com.turtlpass.module.main.navigation
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.navigation.bottomSheet
 import androidx.compose.material3.TopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -45,11 +47,35 @@ fun NavigationScreens(
     onClearAllWebsites: () -> Unit,
     popBackStack: () -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
-
     NavHost(navController, startDestination = NavigationItem.App.route) {
 
-        composable(route = NavigationItem.App.route) {
+        composable(
+            route = NavigationItem.App.route,
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { it },
+                    animationSpec = tween(300)
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -it },
+                    animationSpec = tween(300)
+                )
+            },
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -it },
+                    animationSpec = tween(300)
+                )
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { it },
+                    animationSpec = tween(300)
+                )
+            })
+        {
             ForegroundAppScreen(
                 appManagerUiState = appManagerUiState,
                 hazeState = hazeState,
@@ -72,7 +98,33 @@ fun NavigationScreens(
             }
         }
 
-        composable(route = NavigationItem.Domain.route) {
+        composable(
+            route = NavigationItem.Domain.route,
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { it },
+                    animationSpec = tween(300)
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -it },
+                    animationSpec = tween(300)
+                )
+            },
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -it },
+                    animationSpec = tween(300)
+                )
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { it },
+                    animationSpec = tween(300)
+                )
+            })
+        {
             UrlListScreen(
                 urlManagerUiState = urlManagerUiState,
                 hazeState = hazeState,

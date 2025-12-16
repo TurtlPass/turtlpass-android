@@ -33,8 +33,13 @@ object SecureImageNetworkModule {
     }
 
     /**
-     * Pin certificate (hash of a certificate's Subject Public Key) for given host name
-     *   $ openssl s_client -servername gravatar.com -connect gravatar.com:443 | openssl x509 -pubkey -noout | openssl rsa -pubin -outform der | openssl dgst -sha256 -binary | openssl enc -base64
+     * SPKI PIN: SHA-256 hash of the Subject Public Key Info (SPKI)
+     *
+     *   $ echo | openssl s_client -connect gravatar.com:443 -servername gravatar.com 2>/dev/null \
+     *     | openssl x509 -pubkey -noout \
+     *     | openssl pkey -pubin -outform DER \
+     *     | openssl dgst -sha256 -binary \
+     *     | openssl enc -base64
      */
     @Provides
     @Singleton
@@ -42,7 +47,7 @@ object SecureImageNetworkModule {
         hostCertificatePinners: Set<@JvmSuppressWildcards HostCertificatePinner>
     ): CertificatePinner {
         val builder = CertificatePinner.Builder()
-        hostCertificatePinners.filterNotNull().forEach { (host, pin) ->
+        hostCertificatePinners.toList().forEach { (host, pin) ->
             builder.add(host, pin)
         }
         return builder.build()

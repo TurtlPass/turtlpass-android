@@ -27,7 +27,6 @@ import com.turtlpass.ui.anim.shimmerOverContent
 import com.turtlpass.ui.icons.Globe24Px
 import com.turtlpass.ui.theme.AppTheme
 import com.turtlpass.ui.theme.AppTheme.colors
-import com.turtlpass.ui.theme.Grey200
 
 @Composable
 fun FaviconImage(
@@ -79,7 +78,7 @@ fun FaviconImage(
                     .matchParentSize(),
                 imageVector = Globe24Px,
                 contentDescription = null,
-                tint = Grey200,
+                tint = colors.default.icon,
             )
         }
     }

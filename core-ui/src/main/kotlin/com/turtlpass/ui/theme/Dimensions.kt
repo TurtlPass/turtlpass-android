@@ -5,6 +5,7 @@ import androidx.compose.ui.unit.dp
 
 data class AppDimensions(
     val iconSize: Dp,
+    val iconFieldSize: Dp,
     val cornerRadius: Dp,
     val x2: Dp,
     val x4: Dp,
@@ -16,6 +17,7 @@ data class AppDimensions(
 
 fun appDimensions() = AppDimensions(
     iconSize = 24.dp,
+    iconFieldSize = 28.dp,
     cornerRadius = 16.dp,
     x2 = 2.dp,
     x4 = 4.dp,

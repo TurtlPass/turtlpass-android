@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -27,6 +26,7 @@ import com.turtlpass.ui.icons.Backspace24Px
 import com.turtlpass.ui.theme.AppTheme
 import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.ui.theme.AppTheme.typography
+import com.turtlpass.ui.theme.appIndication
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -44,7 +44,7 @@ fun PinKey(
                     Modifier
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
-                            indication = ripple(),
+                            indication = appIndication(),
                             onClick = onClick
                         )
                 } else Modifier
@@ -66,7 +66,8 @@ fun PinKey(
                 Icon(
                     modifier = Modifier
                         .padding(top = 2.dp)
-                        .padding(end = 3.dp),
+                        .padding(end = 3.dp)
+                        .size(32.dp),
                     imageVector = pinKeyType.imageVector,
                     contentDescription = null,
                     tint = colors.text.title,

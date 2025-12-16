@@ -1,6 +1,8 @@
 <resources>
-    <string name="feature_urlmanager_rationale_accessibility">Accessibility access is required to display your recent websites. It is used only to detect the active domain in the browser and is never shared.</string>
+    <string name="feature_urlmanager_rationale_accessibility">Accessibility access is required to show your recent websites. It’s also used to detect the last used app when the TurtlPass device is connected via USB.</string>
     <string name="feature_urlmanager_rationale_accessibility_button">Enable Accessibility Access</string>
     <string name="feature_urlmanager_no_websites_detected_yet">No websites detected yet</string>
     <string name="feature_urlmanager_start_browsing">Start browsing in your browser app.\nYour recent websites will appear here automatically.</string>
+    <string name="feature_urlmanager_recent_websites">Recent Websites</string>
+    <string name="feature_urlmanager_delete_all">Delete All</string>
 </resources>

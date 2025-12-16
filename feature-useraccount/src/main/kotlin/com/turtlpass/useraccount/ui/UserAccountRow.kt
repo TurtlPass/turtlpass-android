@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.turtlpass.ui.theme.AppTheme
 import com.turtlpass.ui.theme.AppTheme.dimensions
 import com.turtlpass.ui.theme.AppTheme.typography
+import com.turtlpass.ui.theme.appIndication
 import com.turtlpass.useraccount.model.UserAccount
 
 @Composable
@@ -38,7 +38,7 @@ fun UserAccountRow(
             .clip(shape = RoundedCornerShape(dimensions.cornerRadius))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = ripple(),
+                indication = appIndication(),
                 onClick = onClick
             )
             .padding(horizontal = dimensions.x8)

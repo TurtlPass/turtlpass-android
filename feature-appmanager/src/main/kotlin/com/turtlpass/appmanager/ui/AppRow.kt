@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
@@ -25,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.turtlpass.appmanager.model.InstalledAppUi
 import com.turtlpass.ui.theme.AppTheme.dimensions
+import com.turtlpass.ui.theme.appIndication
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeSource
 
@@ -57,11 +57,8 @@ fun LazyItemScope.AppRow(
                             .clip(RoundedCornerShape(dimensions.x8))
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
-                                indication = ripple(),
-                                onClick = {
-                                    //onClick = { if (lazyGridState?.isScrollInProgress == false) onClick() }
-                                    onAppSelected(app)
-                                }
+                                indication = appIndication(),
+                                onClick = { onAppSelected(app) }
                             )
                             .weight(1f),
                         contentAlignment = Alignment.Center,

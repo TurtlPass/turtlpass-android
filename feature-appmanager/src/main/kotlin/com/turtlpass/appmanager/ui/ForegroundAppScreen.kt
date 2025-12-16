@@ -24,7 +24,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
@@ -111,7 +110,7 @@ fun ForegroundAppScreen(
                         .fillMaxWidth()
                         .hazeEffect(
                             state = hazeState,
-                            style = HazeMaterials.ultraThin(containerColor = Color.White),
+                            style = HazeMaterials.ultraThin(containerColor = colors.default.background),
                         ) {
                             progressive = HazeProgressive.verticalGradient(
                                 startIntensity = 1f,
@@ -199,14 +198,14 @@ private class UsageAccessEnabledProvider : PreviewParameterProvider<Boolean> {
     showSystemUi = false,
     device = Devices.PIXEL_XL,
 )
-/*@Preview(
+@Preview(
     name = "Dark theme",
     showBackground = true,
     backgroundColor = 0xff424242,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showSystemUi = false,
     device = Devices.PIXEL_XL,
-)*/
+)
 @Composable
 private fun Preview(
     @PreviewParameter(UsageAccessEnabledProvider::class) item: Boolean

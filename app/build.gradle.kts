@@ -27,7 +27,7 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = 30000
-        versionName = "3.0.0-alpha"
+        versionName = "3.0.0-beta"
         vectorDrawables { useSupportLibrary = true }
         missingDimensionStrategy("device", "anyDevice")
     }

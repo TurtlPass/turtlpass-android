@@ -1,5 +1,6 @@
 package com.turtlpass.ui.theme
 
+import androidx.compose.foundation.IndicationNodeFactory
 import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -10,10 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun Modifier.appRipple(bounded: Boolean = true, color: Color? = null): Modifier {
+fun Modifier.appRipple(bounded: Boolean = true): Modifier {
     val interactionSource = remember { MutableInteractionSource() }
-    val isDarkTheme = isSystemInDarkTheme()
-    val resolvedColor = color ?: if (isDarkTheme) Color.White else Zomp
-    val indication = ripple(color = { resolvedColor }, bounded = bounded)
+    val indication = appIndication(bounded = bounded)
     return this.indication(interactionSource = interactionSource, indication = indication)
+}
+
+@Composable
+fun appIndication(bounded: Boolean = true): IndicationNodeFactory {
+    val isDarkTheme = isSystemInDarkTheme()
+    val resolvedColor = if (isDarkTheme) Color.White else Zomp
+    return ripple(color = { resolvedColor }, bounded = bounded)
 }

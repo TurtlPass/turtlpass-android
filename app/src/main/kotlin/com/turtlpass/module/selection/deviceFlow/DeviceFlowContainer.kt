@@ -68,7 +68,8 @@ fun DeviceFlowContainer(
                                 onBackClick = finish
                             )
                         }
-                    }
+                    },
+                    backgroundColor = colors.default.background
                 ) { padding ->
                     Box(Modifier.padding(padding)) {
                         content()

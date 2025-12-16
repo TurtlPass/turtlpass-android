@@ -20,6 +20,7 @@ class App : Application(), SingletonImageLoader.Factory  {
 
     override fun onCreate() {
         super.onCreate()
+        System.loadLibrary("sqlcipher")
         if (BuildConfig.DEBUG) Timber.plant(FileLogTree(this))
     }
 

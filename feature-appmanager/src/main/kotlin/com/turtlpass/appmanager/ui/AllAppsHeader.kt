@@ -9,11 +9,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.turtlpass.appmanager.R
+import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.ui.theme.AppTheme.dimensions
 import com.turtlpass.ui.theme.AppTheme.typography
 import dev.chrisbanes.haze.HazeState
@@ -36,7 +36,7 @@ fun AllAppsHeader(isSearchFocused: Boolean, hazeState: HazeState) {
                 style = typography.h2.copy(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    color = colors.text.primary,
                 ),
             )
         }

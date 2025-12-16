@@ -24,15 +24,13 @@ fun RecentAppsRowSkeleton(
             val itemModifier = when (index) {
                 0 -> Modifier
                     .padding(start = dimensions.x8)
-                    .hazeSource(hazeState)
                 itemCount - 1 -> Modifier
                     .padding(end = dimensions.x8)
-                    .hazeSource(hazeState)
-                else -> Modifier.hazeSource(hazeState)
+                else -> Modifier
             }
 
             AndroidAdaptiveIconSkeleton(
-                modifier = itemModifier
+                modifier = itemModifier.hazeSource(hazeState)
             )
         }
     }

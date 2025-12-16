@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
-import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +41,7 @@ import com.turtlpass.ui.theme.AppTheme
 import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.ui.theme.AppTheme.dimensions
 import com.turtlpass.ui.theme.Grey200
+import com.turtlpass.ui.theme.appIndication
 
 @Composable
 fun InstalledAppAdaptiveDrawable(
@@ -87,12 +87,12 @@ fun InstalledAppAdaptiveDrawable(
             .clip(RoundedCornerShape(dimensions.cornerRadius))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = ripple(),
+                indication = appIndication(),
                 onClick = onClick
             )
             .border(
                 width = 1.dp,
-                color = Grey200,
+                color = colors.default.border,
                 shape = RoundedCornerShape(dimensions.cornerRadius),
             ),
         contentAlignment = Alignment.Center
@@ -135,7 +135,7 @@ fun InstalledAppAdaptiveDrawable(
                 modifier = Modifier.size(64.dp),
                 imageVector = Turtlpass24Px,
                 contentDescription = null,
-                tint = Grey200,
+                tint = colors.default.border,
             )
         }
     }

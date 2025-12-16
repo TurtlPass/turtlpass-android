@@ -28,22 +28,4 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
-<!--    <style name="Theme.TransparentActivity.NoSplash" parent="Theme.Material3.DayNight.NoActionBar">-->
-<!--        <item name="android:windowIsTranslucent">true</item>-->
-<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
-<!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
-<!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
-<!--        <item name="android:windowDisablePreview">true</item> &lt;!&ndash; disable splash &ndash;&gt;-->
-<!--    </style>-->
-
-<!--    <style name="TransparentActivity" parent="Theme.Material3.DayNight.NoActionBar">-->
-<!--        <item name="android:windowIsTranslucent">true</item>-->
-<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
-<!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
-<!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
-<!--        <item name="android:windowDisablePreview">true</item> &lt;!&ndash; disable splash: api 28+ &ndash;&gt;-->
-<!--        <item name="android:windowIsFloating">false</item>-->
-<!--        <item name="android:windowNoTitle">true</item>-->
-<!--    </style>-->
-
 </resources>

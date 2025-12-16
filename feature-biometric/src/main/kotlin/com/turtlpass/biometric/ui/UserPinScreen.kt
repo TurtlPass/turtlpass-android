@@ -1,12 +1,13 @@
 package com.turtlpass.biometric.ui
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.ExperimentalMaterialApi
@@ -30,14 +31,15 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import com.turtlpass.biometric.R
 import com.turtlpass.biometric.viewmodel.BiometricUiState
 import com.turtlpass.ui.theme.AppTheme
+import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.ui.theme.AppTheme.dimensions
 import com.turtlpass.ui.theme.AppTheme.typography
-import com.turtlpass.ui.theme.Grey400
 import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UserPinScreen(
+    modifier: Modifier = Modifier,
     biometricUiState: State<BiometricUiState>,
     pinLength: Int = 6,
     onPinCompleted: (pin: List<Int>, enableFingerprint: Boolean) -> Unit,
@@ -57,16 +59,19 @@ fun UserPinScreen(
     }
 
     Column(
-        modifier = Modifier
-            .wrapContentHeight()
+        modifier = modifier
             .fillMaxWidth()
             .padding(bottom = dimensions.x16)
             .navigationBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Row(
             modifier = Modifier
-                .padding(top = dimensions.x32 + dimensions.x16)
+                .padding(
+                    top = dimensions.x32 + dimensions.x16,
+                    bottom = dimensions.x16
+                )
         ) {
             (0 until pinLength).forEach { index ->
                 PinIndicator(
@@ -104,15 +109,15 @@ fun UserPinScreen(
                     checked = enableFingerprint,
                     onCheckedChange = { enableFingerprint = it },
                     colors = CheckboxDefaults.colors(
-                        checkedColor = Grey400,
-                        uncheckedColor = Grey400,
+                        checkmarkColor = colors.default.accent,
+                        checkedColor = colors.text.body,
+                        uncheckedColor = colors.text.body,
                     ),
                 )
                 Text(
                     text = stringResource(R.string.feature_biometric_use_fingerprint),
-//                    text = "Keep your PIN protected by your fingerprint for future use.",
                     style = typography.body.copy(
-                        color = Grey400,
+                        color = colors.text.body,
                     ),
                 )
             }
@@ -135,20 +140,22 @@ private class FingerprintEnabledProvider : PreviewParameterProvider<Boolean> {
     showSystemUi = false,
     device = Devices.PIXEL_XL,
 )
-/*@Preview(
+@Preview(
     name = "Dark theme",
     showBackground = true,
     backgroundColor = 0xff424242,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showSystemUi = false,
     device = Devices.PIXEL_XL,
-)*/
+)
 @Composable
 private fun Preview(
     @PreviewParameter(FingerprintEnabledProvider::class) item: Boolean
 ) {
     AppTheme {
         UserPinScreen(
+            modifier = Modifier.fillMaxHeight(),
+//            modifier = Modifier.wrapContentHeight(),
             biometricUiState = remember {
                 mutableStateOf(
                     BiometricUiState(

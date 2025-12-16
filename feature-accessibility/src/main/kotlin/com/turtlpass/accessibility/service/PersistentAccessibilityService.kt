@@ -12,7 +12,6 @@ import com.turtlpass.accessibility.extension.getBrowserUrlString
 import com.turtlpass.accessibility.extension.getBrowserUrlViewId
 import com.turtlpass.accessibility.extension.isBrowserApp
 import com.turtlpass.accessibility.extension.parseUrl
-import com.turtlpass.accessibility.extension.shouldSendThisPackageName
 import com.turtlpass.db.dao.WebsiteEventDao
 import com.turtlpass.db.entities.WebsiteEventEntity
 import com.turtlpass.model.ObservedAccessibilityEvent
@@ -81,8 +80,6 @@ class PersistentAccessibilityService : AccessibilityService() {
 
     private fun processForegroundApp(event: AccessibilityEvent) {
         val packageName = event.packageName?.toString() ?: return
-        val className = event.className?.toString() ?: return
-        if (!shouldSendThisPackageName(packageName, className)) return
         // Skip if packageName hasn't changed
         if (packageName == lastPackageName) return
         lastPackageName = packageName

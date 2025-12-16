@@ -24,9 +24,9 @@ android {
         consumerProguardFiles("consumer-rules.pro")
 
         buildConfigField("String", "GOOGLE_HOST", "\"www.google.com\"")
-        buildConfigField("String", "GOOGLE_PIN_SET", "\"sha256/9lVBvOJ4XM5e3U0m2d483rD4I/JDDL3S4n6Zqfa6/iY=\"")
+        buildConfigField("String", "GOOGLE_SPKI_PIN", "\"sha256/iXK48jI+5eMBOyAex+NUO125Sv+Wx0hfOyQHdyuQ2pQ=\"")
         buildConfigField("String", "GSTATIC_HOST", "\".gstatic.com\"")
-        buildConfigField("String", "GSTATIC_PIN_SET", "\"sha256/Bs8gwVj6+BXxzZp9Sa4Q7nwlzBxgThy352RKWhV6sOs=\"")
+        buildConfigField("String", "GSTATIC_SPKI_PIN", "\"sha256/NeARMRZSkfI40s+ApV0QxHMvkN5y8VQ+kCiwH9Hl/e0=\"")
     }
 
     buildTypes {

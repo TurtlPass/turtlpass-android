@@ -18,7 +18,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.turtlpass.ui.icons.ArrowDropDown
-import com.turtlpass.ui.icons.ArrowDropDownCircle24Px
 import com.turtlpass.ui.theme.AppTheme
 import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.ui.theme.AppTheme.dimensions

@@ -4,9 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -21,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.turtlpass.R
 import com.turtlpass.appmanager.model.InstalledAppUi
@@ -60,8 +57,8 @@ fun SelectedInputsScreen(
         Column(
             Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 24.dp)
+                .padding(horizontal = dimensions.x16 + dimensions.x8)
+                .padding(bottom = dimensions.x16 + dimensions.x8)
         ) {
             when (selectionUiState.value.model.productType) {
                 ProductTypeUi.Application -> {
@@ -92,15 +89,15 @@ fun SelectedInputsScreen(
                 onTrailingIconClick = onNavigateUserAccounts,
             )
 
-            Spacer(Modifier.height(dimensions.x16 + dimensions.x8))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight(),
+                    .wrapContentHeight()
+                    .padding(top = dimensions.x16 + dimensions.x8),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 SecondaryButtonSmall(
-                    text = "Cancel",
+                    text = stringResource(R.string.cancel),
                     onClick = onCancel,
                 )
                 PrimaryButtonSmall(
@@ -111,7 +108,6 @@ fun SelectedInputsScreen(
                     backgroundColor = colors.default.button
                 )
             }
-            //todo: ("<Advanced Options> expandable") // pass size(slider 1-128) / type [0-9][a-Z][±!@£] checkboxes
         }
     }
 }
@@ -131,14 +127,14 @@ private class ProductTypeUiProvider : PreviewParameterProvider<ProductTypeUi> {
     showSystemUi = false,
     device = Devices.PIXEL_XL,
 )
-/*@Preview(
+@Preview(
     name = "Dark theme",
     showBackground = true,
     backgroundColor = 0xff424242,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showSystemUi = false,
     device = Devices.PIXEL_XL,
-)*/
+)
 @Composable
 private fun Preview(
     @PreviewParameter(ProductTypeUiProvider::class) item: ProductTypeUi
@@ -159,9 +155,6 @@ private fun Preview(
                 )
             },
             userAccountUiState = remember { mutableStateOf(UserAccountUiState()) },
-//            permissionState = remember {
-//                mutableStateOf(PermissionState(accountsPermission = AccountsPermission.Rationale))
-//            },
             onUserAccount = {},
             onCancel = {},
             onGetPassword = {},

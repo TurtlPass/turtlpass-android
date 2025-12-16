@@ -36,8 +36,7 @@ fun appTypography(
         lineHeight = 36.sp,
         fontFamily = fontFamily,
         fontWeight = FontWeight.Bold,
-        color = RaisinBlack,
-//        color = colors.text.primary,
+        color = colors.text.primary,
     ),
     h1 = TextStyle(
         fontSize = 39.sp,

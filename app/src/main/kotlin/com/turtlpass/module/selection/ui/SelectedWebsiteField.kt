@@ -5,7 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -29,8 +30,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.turtlpass.R
 import com.turtlpass.model.WebsiteUi
 import com.turtlpass.module.selection.model.SelectionInput
 import com.turtlpass.module.selection.model.SelectionUiState
@@ -79,13 +80,13 @@ fun SelectedWebsiteField(
                     contentPadding = OutlinedTextFieldDefaults.contentPadding(),
                     leadingIcon = {
                         FaviconImage(
-                            modifier = Modifier.size(28.dp),
+                            modifier = Modifier.requiredSize(dimensions.iconFieldSize),
                             url = uiState.value.model.selectedUrl?.faviconUrl ?: ""
                         )
                     },
                     label = {
                         Text(
-                            text = "Website",
+                            text = stringResource(R.string.website),
                             color = colors.text.body,
                             style = typography.title.copy(fontSize = 14.sp),
                         )

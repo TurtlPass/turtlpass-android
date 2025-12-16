@@ -1,34 +1,37 @@
 package com.turtlpass.module.selection.topbar
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
-import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.turtlpass.ui.icons.ArrowBack24Px
+import com.turtlpass.R
 import com.turtlpass.ui.theme.AppTheme
 import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.ui.theme.AppTheme.dimensions
 import com.turtlpass.ui.theme.AppTheme.typography
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarSelection(
-    title: String,
-    onBackClick: () -> Unit
+fun TopAppBarBottomSheetLogo(
 ) {
-    CenterAlignedTopAppBar(
+    TopAppBar(
         windowInsets = WindowInsets(
             top = 0.dp,   // ignore status bar inset
             bottom = 0.dp,
@@ -38,30 +41,31 @@ fun TopAppBarSelection(
         title = {
             Text(
                 modifier = Modifier
-                    .padding(start = dimensions.x4),
-                text = title,
+                    .padding(start = 4.dp),
+                text = stringResource(R.string.app_name),
                 style = typography.logo.copy(
-                    fontSize = 22.sp,
+                    fontSize = 26.sp,
                 ),
             )
         },
         navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = ArrowBack24Px,
-                    contentDescription = "Back",
-                    tint = colors.text.primary,
-                )
-            }
+            Image(
+                imageVector = ImageVector.vectorResource(id = R.drawable.vector_turtlpass),
+                contentDescription = "TurtlPass Logo",
+                modifier = Modifier
+                    .padding(start = 22.dp)
+                    .size(dimensions.x32)
+            )
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = colors.default.background,
-            titleContentColor = colors.text.primary
+            scrolledContainerColor = colors.default.background,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary
         ),
     )
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Preview(
     name = "Light theme",
     showBackground = true,
@@ -81,9 +85,6 @@ fun TopAppBarSelection(
 @Composable
 private fun Preview() {
     AppTheme {
-        TopAppBarSelection(
-            title = "Confirm selection",
-            onBackClick = {},
-        )
+        TopAppBarBottomSheetLogo()
     }
 }

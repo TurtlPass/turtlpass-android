@@ -12,7 +12,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -21,9 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.turtlpass.ui.icons.TravelExplore24Px
 import com.turtlpass.ui.theme.AppTheme
+import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.ui.theme.AppTheme.dimensions
 import com.turtlpass.ui.theme.AppTheme.typography
-import com.turtlpass.ui.theme.Grey400
 import com.turtlpass.urlmanager.R
 
 @Composable
@@ -38,7 +37,7 @@ fun EmptyWebsitesState(
         Icon(
             imageVector = TravelExplore24Px,
             contentDescription = null,
-            tint = Grey400,
+            tint = colors.text.body,
             modifier = Modifier.size(dimensions.x64)
         )
 
@@ -49,7 +48,7 @@ fun EmptyWebsitesState(
             style = typography.h2.copy(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.Black
+                color = colors.text.primary
             )
         )
 
@@ -60,7 +59,7 @@ fun EmptyWebsitesState(
             style = typography.subtitle.copy(
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
-                color = Grey400
+                color = colors.text.body
             )
         )
     }
@@ -75,14 +74,14 @@ fun EmptyWebsitesState(
     showSystemUi = false,
     device = Devices.PIXEL_XL,
 )
-/*@Preview(
+@Preview(
     name = "Dark theme",
     showBackground = true,
     backgroundColor = 0xff424242,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showSystemUi = false,
     device = Devices.PIXEL_XL,
-)*/
+)
 @Composable
 private fun Preview(
 ) {

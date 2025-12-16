@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.turtlpass.appmanager.ui.AndroidAppImage
+import com.turtlpass.ui.theme.AppTheme.dimensions
 
 @Composable
 fun UrlLeadingIcons(
@@ -20,7 +21,7 @@ fun UrlLeadingIcons(
             contentAlignment = Alignment.CenterEnd
         ) {
             FaviconImage(
-                modifier = Modifier.size(28.dp),
+                modifier = Modifier.requiredSize(dimensions.iconFieldSize),
                 url = faviconUrl
             )
         }

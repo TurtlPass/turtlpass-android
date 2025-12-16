@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +29,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,9 +49,8 @@ import com.turtlpass.urlmanager.ui.menu.IconContextMenu
 import com.turtlpass.urlmanager.ui.skeleton.UrlItemSkeleton
 import com.turtlpass.urlmanager.viewmodel.UrlManagerUiState
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -75,138 +74,139 @@ fun UrlListScreen(
     }
     var expandedItemKey by remember { mutableStateOf<String?>(null) }
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .hazeEffect(
-                state = hazeState,
-                style = HazeMaterials.ultraThin(containerColor = Color.White),
-            )
-            .background(colors.default.background)
-    ) {
-        // HEADER
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    modifier = Modifier
-                        .wrapContentWidth()
-                        .padding(top = dimensions.x16)
-                        .padding(bottom = dimensions.x8 + dimensions.x4)
-                        .padding(horizontal = dimensions.x16),
-                    text = "Recent Websites",
-                    style = typography.h2.copy(
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                    ),
-                )
-                AnimatedVisibility(
-                    visible = urlManagerUiState.value.isAccessibilityEnabled
-                            && websiteList.isNotEmpty()
-                ) {
-                    IconContextMenu(onDelete = onClearAll)
-                }
-            }
-        }
-
-        // EMPTY STATE WHEN ACCESSIBILITY ENABLED BUT LIST EMPTY
-        if (
-            urlManagerUiState.value.isAccessibilityEnabled &&
-            !urlManagerUiState.value.websiteListResult.isLoading() &&
-            websiteList.isEmpty()
+    Box {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colors.default.background)
         ) {
+            // HEADER
             item {
-                EmptyWebsitesState(
+                Row(
                     modifier = Modifier
-                        .fillParentMaxSize()
-                        .padding(bottom = dimensions.x64)
-                        .padding(horizontal = dimensions.x16)
-                )
-            }
-        }
-        // SKELETON LOADING
-        else if (urlManagerUiState.value.websiteListResult.isLoading()) {
-            items(12) {
-                AnimatedVisibility(visible = urlManagerUiState.value.isAccessibilityEnabled) {
-                    UrlItemSkeleton(
-                        modifier = Modifier
-                            .padding(vertical = dimensions.x4)
-                            .padding(horizontal = dimensions.x16)
-                            .animateItem()
-                    )
-                }
-            }
-            // ACTUAL WEBSITE ITEMS
-        } else {
-            itemsIndexed(
-                items = websiteList,
-                key = { _, item -> "${item.timestamp}_${item.url}" }
-            ) { index, websiteUi ->
-                var isVisible by remember { mutableStateOf(true) }
-                val itemKey = "${websiteUi.timestamp}_${websiteUi.url}"
-
-                AnimatedVisibility(
-                    visible = isVisible && urlManagerUiState.value.isAccessibilityEnabled,
-                    exit = shrinkVertically(animationSpec = tween(250)) + fadeOut(
-                        animationSpec = tween(
-                            250
-                        )
-                    )
+                        .hazeSource(hazeState)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    val verticalModifier = when (index) {
-                        websiteList.lastIndex -> Modifier
-                            .padding(top = dimensions.x4)
-                            .padding(bottom = dimensions.x8)
-
-                        else -> Modifier.padding(vertical = dimensions.x4)
+                    Text(
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .padding(top = dimensions.x16)
+                            .padding(bottom = dimensions.x8 + dimensions.x4)
+                            .padding(horizontal = dimensions.x16),
+                        text = stringResource(R.string.feature_urlmanager_recent_websites),
+                        style = typography.h2.copy(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colors.text.primary,
+                        ),
+                    )
+                    AnimatedVisibility(
+                        visible = urlManagerUiState.value.isAccessibilityEnabled
+                                && websiteList.isNotEmpty()
+                    ) {
+                        IconContextMenu(onDelete = onClearAll)
                     }
+                }
+            }
 
-                    SwipeRevealUrlItem(
-                        modifier = verticalModifier
-                            .animateItem(), // smooth diff animation
-                        websiteUi = websiteUi,
-                        isExpanded = expandedItemKey == itemKey,
-                        onExpandChanged = { expanded ->
-                            expandedItemKey = if (expanded) itemKey else null
-                        },
-                        onSelectWebsite = {
-                            onSelectWebsite(websiteUi)
-                        },
-                        onDelete = {
-                            // Animate exit before removing
-                            isVisible = false
-                            scope.launch {
-                                delay(250)
-                                onDeleteWebsite(websiteUi)
-                                if (expandedItemKey == itemKey) expandedItemKey = null
-                            }
-                        }
+            // EMPTY STATE WHEN ACCESSIBILITY ENABLED BUT LIST EMPTY
+            if (
+                urlManagerUiState.value.isAccessibilityEnabled &&
+                !urlManagerUiState.value.websiteListResult.isLoading() &&
+                websiteList.isEmpty()
+            ) {
+                item {
+                    EmptyWebsitesState(
+                        modifier = Modifier
+                            .hazeSource(hazeState)
+                            .fillParentMaxSize()
+                            .padding(bottom = dimensions.x64)
+                            .padding(horizontal = dimensions.x16)
                     )
                 }
             }
-        }
+            // SKELETON LOADING
+            else if (urlManagerUiState.value.websiteListResult.isLoading()) {
+                items(12) {
+                    AnimatedVisibility(visible = urlManagerUiState.value.isAccessibilityEnabled) {
+                        UrlItemSkeleton(
+                            modifier = Modifier
+                                .hazeSource(hazeState)
+                                .padding(vertical = dimensions.x4)
+                                .padding(horizontal = dimensions.x16)
+                                .animateItem()
+                        )
+                    }
+                }
+                // ACTUAL WEBSITE ITEMS
+            } else {
+                itemsIndexed(
+                    items = websiteList,
+                    key = { _, item -> "${item.timestamp}_${item.url}" }
+                ) { index, websiteUi ->
+                    var isVisible by remember { mutableStateOf(true) }
+                    val itemKey = "${websiteUi.timestamp}_${websiteUi.url}"
 
-        item {
-            AnimatedVisibility(visible = urlManagerUiState.value.isAccessibilityEnabled.not()) {
-                ActionCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentHeight()
-                        .padding(
-                            horizontal = dimensions.x16
-                        ),
-                    text = stringResource(R.string.feature_urlmanager_rationale_accessibility),
-                    buttonText = stringResource(R.string.feature_urlmanager_rationale_accessibility_button),
-                    onClick = {
-                        context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
-                    },
-                    backgroundColor = colors.default.cardBackground,
-                )
+                    AnimatedVisibility(
+                        visible = isVisible && urlManagerUiState.value.isAccessibilityEnabled,
+                        exit = shrinkVertically(animationSpec = tween(250)) + fadeOut(
+                            animationSpec = tween(
+                                250
+                            )
+                        )
+                    ) {
+                        val verticalModifier = when (index) {
+                            websiteList.lastIndex -> Modifier
+                                .padding(top = dimensions.x4)
+                                .padding(bottom = dimensions.x8)
+
+                            else -> Modifier.padding(vertical = dimensions.x4)
+                        }
+
+                        SwipeRevealUrlItem(
+                            modifier = verticalModifier
+                                .hazeSource(hazeState)
+                                .animateItem(), // smooth diff animation
+                            websiteUi = websiteUi,
+                            isExpanded = expandedItemKey == itemKey,
+                            onExpandChanged = { expanded ->
+                                expandedItemKey = if (expanded) itemKey else null
+                            },
+                            onSelectWebsite = {
+                                onSelectWebsite(websiteUi)
+                            },
+                            onDelete = {
+                                // Animate exit before removing
+                                isVisible = false
+                                scope.launch {
+                                    delay(250)
+                                    onDeleteWebsite(websiteUi)
+                                    if (expandedItemKey == itemKey) expandedItemKey = null
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+
+            item {
+                AnimatedVisibility(visible = urlManagerUiState.value.isAccessibilityEnabled.not()) {
+                    ActionCard(
+                        modifier = Modifier
+                            .hazeSource(hazeState)
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(horizontal = dimensions.x16),
+                        text = stringResource(R.string.feature_urlmanager_rationale_accessibility),
+                        buttonText = stringResource(R.string.feature_urlmanager_rationale_accessibility_button),
+                        onClick = {
+                            context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                        },
+                        backgroundColor = colors.default.cardBackground,
+                    )
+                }
             }
         }
     }
@@ -226,14 +226,14 @@ private class AccessibilityServiceEnabledProvider : PreviewParameterProvider<Boo
     showSystemUi = false,
     device = Devices.PIXEL_XL,
 )
-/*@Preview(
+@Preview(
     name = "Dark theme",
     showBackground = true,
     backgroundColor = 0xff424242,
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showSystemUi = false,
     device = Devices.PIXEL_XL,
-)*/
+)
 @Composable
 private fun Preview(
     @PreviewParameter(AccessibilityServiceEnabledProvider::class) item: Boolean

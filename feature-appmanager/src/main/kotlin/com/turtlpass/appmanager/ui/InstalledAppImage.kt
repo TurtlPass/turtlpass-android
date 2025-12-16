@@ -26,9 +26,9 @@ import com.eygraber.compose.placeholder.shimmer
 import com.turtlpass.appmanager.fetcher.icon.AppIcon
 import com.turtlpass.appmanager.model.InstalledAppUi
 import com.turtlpass.ui.icons.Apps24Px
-import com.turtlpass.ui.tintedVector.rememberTintedVectorPainter
 import com.turtlpass.ui.theme.AppTheme
 import com.turtlpass.ui.theme.AppTheme.colors
+import com.turtlpass.ui.tintedVector.rememberTintedVectorPainter
 
 @Composable
 fun InstalledAppImage(

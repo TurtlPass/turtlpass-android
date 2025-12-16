@@ -24,9 +24,9 @@ android {
         consumerProguardFiles("consumer-rules.pro")
 
         buildConfigField("String", "GRAVATAR_HOST", "\"s.gravatar.com\"")
-        buildConfigField("String", "GRAVATAR_PIN_SET", "\"sha256/xAiTj+krWlCqnOsDColRPKS9JppjzZ15bvE+oNlMswk=\"")
+        buildConfigField("String", "GRAVATAR_SPKI_PIN", "\"sha256/xAiTj+krWlCqnOsDColRPKS9JppjzZ15bvE+oNlMswk=\"")
         buildConfigField("String", "AVATAR_LIARA_HOST", "\"avatar.iran.liara.run\"")
-        buildConfigField("String", "AVATAR_LIARA_PIN_SET", "\"sha256/d1/Kxmk/mF0+kMdxusbSms/pXXUmz+vus2AuWZhUmiM=\"")
+        buildConfigField("String", "AVATAR_LIARA_SPKI_PIN", "\"sha256/d1/Kxmk/mF0+kMdxusbSms/pXXUmz+vus2AuWZhUmiM=\"")
    }
 
     buildTypes {

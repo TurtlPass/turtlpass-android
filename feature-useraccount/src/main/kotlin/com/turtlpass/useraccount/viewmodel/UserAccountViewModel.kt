@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.turtlpass.domain.Result
-import com.turtlpass.domain.data
 import com.turtlpass.useraccount.model.UserAccount
 import com.turtlpass.useraccount.usecase.PersistAccountUseCase
 import com.turtlpass.useraccount.usecase.RetrieveAccountUseCase
@@ -16,13 +15,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -62,27 +59,20 @@ class UserAccountViewModel @Inject constructor(
 
     private fun observeUserAccountsAndResolveInitial() {
         viewModelScope.launch {
-            // Convert user accounts flow to a StateFlow for easy sharing and latest value replay
-            val accountsStateFlow = userAccountsUseCase()
-                .stateIn(
-                    scope = this,
-                    started = SharingStarted.Lazily,
-                    initialValue = Result.Loading
-                )
-
-            // Collect latest accounts to always update UI
-            launch {
-                accountsStateFlow.collect { accountsResult ->
-                    _uiState.update { it.copy(userAccountsResult = accountsResult) }
-                }
-            }
-
-            // Resolve the initial selected account exactly once
             val persistedAccount = retrieveAccountUseCase().first()
-            val initialAccount = persistedAccount ?: accountsStateFlow.value.data?.firstOrNull()
 
-            initialAccount?.let { account ->
-                _uiState.update { it.copy(selectedAccount = account) }
+            userAccountsUseCase().collect { result ->
+                _uiState.update { it.copy(userAccountsResult = result) }
+
+                if (result is Result.Success) {
+                    val initialAccount = persistedAccount ?: result.data.firstOrNull()
+
+                    initialAccount?.let {
+                        _uiState.update { state ->
+                            state.copy(selectedAccount = it)
+                        }
+                    }
+                }
             }
         }
     }

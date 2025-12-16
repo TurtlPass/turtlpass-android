@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.turtlpass.domain.Result
 import com.turtlpass.ui.input.DropdownTextField
@@ -66,7 +65,7 @@ fun UserAccountField(
             leadingIcon = {
                 UserAccountImage(
                     modifier = Modifier
-                        .requiredSize(28.dp),
+                        .requiredSize(dimensions.iconFieldSize),
                     userAccount = userAccountUiState.value.selectedAccount,
                     shimmerEnabled = false,
                 )
