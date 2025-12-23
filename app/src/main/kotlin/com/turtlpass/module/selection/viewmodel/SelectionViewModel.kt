@@ -36,6 +36,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+import kotlin.String
 
 @OptIn(
     ExperimentalCoroutinesApi::class,
@@ -182,7 +183,7 @@ class SelectionViewModel @Inject constructor(
         }
     }
 
-    fun updatePin(pin: String) {
+    fun updatePin(pin: String?) {
         _uiState.update { state ->
             state.copy(model = state.model.copy(selectedPin = pin))
         }
@@ -205,9 +206,9 @@ class SelectionViewModel @Inject constructor(
                 }
             }
 
-            UsbUiEvent.UsbWriteError -> {
+            is UsbUiEvent.UsbWriteError -> {
                 _uiState.update { state ->
-                    state.copy(loaderType = LoaderType.Error)
+                    state.copy(loaderType = LoaderType.Error(usbEvent.errorMessage))
                 }
             }
         }

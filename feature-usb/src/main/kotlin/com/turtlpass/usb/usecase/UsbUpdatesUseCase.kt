@@ -9,7 +9,9 @@ import android.hardware.usb.UsbManager
 import com.turtlpass.di.ApplicationScope
 import com.turtlpass.domain.parcelable
 import com.turtlpass.usb.hardware.HardwareConfiguration
-import com.turtlpass.usb.model.UsbAction
+import com.turtlpass.usb.model.UsbEvent
+import com.turtlpass.usb.receiver.registerReceiverCompat
+import com.turtlpass.usb.receiver.unregisterReceiverSafe
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
@@ -19,7 +21,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 class UsbUpdatesUseCase @Inject constructor(
@@ -28,31 +29,29 @@ class UsbUpdatesUseCase @Inject constructor(
     private val usbManager: UsbManager,
     private val requestUsbPermissionUseCase: RequestUsbPermissionUseCase,
 ) {
-    suspend operator fun invoke(): Flow<UsbAction> {
+    operator fun invoke(): Flow<UsbEvent> {
         return merge(
             usbEventFlow(),
             permissionEventFlow()
         )
     }
 
-    private fun usbEventFlow(): Flow<UsbAction> = callbackFlow {
+    private fun usbEventFlow(): Flow<UsbEvent> = callbackFlow {
 
         val usbReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
                 when (intent.action) {
                     UsbManager.ACTION_USB_DEVICE_ATTACHED -> {
                         intent.parcelable<UsbDevice>(UsbManager.EXTRA_DEVICE)?.let { usbDevice ->
-                            trySend(UsbAction.DeviceAttached(usbDevice))
-
-                            // Delay to allow Android to auto-grant "Always allow" permission
                             coroutineScope.launch {
-                                Timber.d("hasPermission BEFORE delay = ${usbManager.hasPermission(usbDevice)}") // false
+                                // Delay to allow Android to auto-grant "Always allow" permission
                                 delay(150)
-                                Timber.d("hasPermission AFTER delay = ${usbManager.hasPermission(usbDevice)}") // true
 
                                 if (usbManager.hasPermission(usbDevice)) {
-                                    trySend(UsbAction.PermissionGranted(usbDevice))
+                                    trySend(UsbEvent.AttachedWithPermission(usbDevice))
+
                                 } else if (HardwareConfiguration.isSupported(usbDevice)) {
+                                    trySend(UsbEvent.AttachedWithoutPermission(usbDevice))
                                     requestUsbPermissionUseCase(usbDevice)
                                 }
                             }
@@ -60,42 +59,43 @@ class UsbUpdatesUseCase @Inject constructor(
                     }
                     UsbManager.ACTION_USB_DEVICE_DETACHED -> {
                         intent.parcelable<UsbDevice>(UsbManager.EXTRA_DEVICE)?.let { usbDevice ->
-                            trySend(UsbAction.DeviceDetached(usbDevice))
-                        } ?: trySend(UsbAction.DeviceDetached())
+                            trySend(UsbEvent.DeviceDetached(usbDevice))
+                        } ?: trySend(UsbEvent.DeviceDetached())
                     }
                 }
             }
         }
 
-        context.registerReceiver(
-            usbReceiver,
-            IntentFilter().apply {
+        context.registerReceiverCompat(
+            receiver = usbReceiver,
+            filter = IntentFilter().apply {
                 addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED)
                 addAction(UsbManager.ACTION_USB_DEVICE_DETACHED)
             },
-            Context.RECEIVER_NOT_EXPORTED
+            exported = false
         )
 
         // Initial check: emit attached devices only if supported
         usbManager.deviceList.values
             .filter { HardwareConfiguration.isSupported(it) }
             .forEach { usbDevice ->
-                trySend(UsbAction.DeviceAttached(usbDevice))
                 if (usbManager.hasPermission(usbDevice)) {
-                    trySend(UsbAction.PermissionGranted(usbDevice))
+                    trySend(UsbEvent.AttachedWithPermission(usbDevice))
+                } else {
+                    trySend(UsbEvent.AttachedWithoutPermission(usbDevice))
                 }
             }
 
-        awaitClose { context.unregisterReceiver(usbReceiver) }
+        awaitClose { context.unregisterReceiverSafe(usbReceiver) }
     }
 
-    private fun permissionEventFlow(): Flow<UsbAction> = usbPermissionEvents
+    private fun permissionEventFlow(): Flow<UsbEvent> = usbPermissionEvents
 
     companion object {
-        private val _usbPermissionEvents = MutableSharedFlow<UsbAction>(replay = 0)
-        val usbPermissionEvents: SharedFlow<UsbAction> = _usbPermissionEvents
+        private val _usbPermissionEvents = MutableSharedFlow<UsbEvent>(replay = 0)
+        val usbPermissionEvents: SharedFlow<UsbEvent> = _usbPermissionEvents
 
-        suspend fun emit(action: UsbAction) {
+        suspend fun emit(action: UsbEvent) {
             _usbPermissionEvents.emit(action)
         }
     }

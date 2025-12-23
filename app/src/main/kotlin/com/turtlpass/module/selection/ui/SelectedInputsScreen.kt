@@ -57,7 +57,7 @@ fun SelectedInputsScreen(
         Column(
             Modifier
                 .fillMaxWidth()
-                .padding(horizontal = dimensions.x16 + dimensions.x8)
+                .padding(horizontal = dimensions.x16)
                 .padding(bottom = dimensions.x16 + dimensions.x8)
         ) {
             when (selectionUiState.value.model.productType) {

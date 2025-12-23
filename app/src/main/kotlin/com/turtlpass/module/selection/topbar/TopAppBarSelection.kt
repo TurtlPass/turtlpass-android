@@ -26,7 +26,7 @@ import com.turtlpass.ui.theme.AppTheme.typography
 @Composable
 fun TopAppBarSelection(
     title: String,
-    onBackClick: () -> Unit
+    onBackClick: (() -> Unit)?,
 ) {
     CenterAlignedTopAppBar(
         windowInsets = WindowInsets(
@@ -46,12 +46,14 @@ fun TopAppBarSelection(
             )
         },
         navigationIcon = {
-            IconButton(onClick = onBackClick) {
-                Icon(
-                    imageVector = ArrowBack24Px,
-                    contentDescription = "Back",
-                    tint = colors.text.primary,
-                )
+            if (onBackClick != null) {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        imageVector = ArrowBack24Px,
+                        contentDescription = "Back",
+                        tint = colors.text.primary,
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(

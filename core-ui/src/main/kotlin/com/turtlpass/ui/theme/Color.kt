@@ -26,7 +26,6 @@ val Grey300 = Color(0xff9ca5af)
 val Grey400 = Color(0xff6c757f)
 val Grey500 = Color(0xff4d5660)
 
-
 fun Color.disabledColor(enabled: Boolean): Color {
     return if (enabled) this else copy(alpha = 0.5f)
 }
@@ -54,7 +53,7 @@ data class AppColors(
         val background by ColorBox(light = Color.White, dark = DarkBackground)
         val sheetBackground by ColorBox(light = Color.White, dark = DarkCard)
         val cardBackground by ColorBox(light = MintCream, dark = RaisinBlack)
-        val scrim by ColorBox(light = Color.Transparent, dark = Color.Transparent)
+        val scrim by ColorBox(light = Color.Black.copy(alpha = 0.4f), Color.Black.copy(alpha = 0.6f))
         val input by ColorBox(light = MintCream, dark = RaisinBlack)
         val unfocused by ColorBox(light = MagicMint, dark = Color.White)
         val accent by ColorBox(light = Zomp, dark = Zomp)

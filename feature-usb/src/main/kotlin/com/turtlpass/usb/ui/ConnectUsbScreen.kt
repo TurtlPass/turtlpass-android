@@ -52,7 +52,8 @@ import com.turtlpass.usb.model.UsbUiState
 fun ConnectUsbScreen(
     modifier: Modifier = Modifier,
     usbUiState: State<UsbUiState>,
-    onReadyClick: () -> Unit,
+    onUsbRequestPermissionClick: () -> Unit,
+    onGetPasswordClick: () -> Unit,
 ) {
     val composition by rememberLottieComposition(
         spec = LottieCompositionSpec.Asset("lottie_usb_stick.json")
@@ -76,7 +77,6 @@ fun ConnectUsbScreen(
         )
         with(usbUiState.value) {
             val text = when {
-//                isUsbConnected.not() -> stringResource(R.string.connect_usb_device)
                 isUsbConnected.not() -> ""
                 usbPermission == UsbPermission.NotGranted -> stringResource(R.string.feature_usb_authorise_usb_device)
                 else -> stringResource(R.string.feature_usb_connect_usb_device_ready)
@@ -96,13 +96,13 @@ fun ConnectUsbScreen(
                 visible = usbUiState.value.isUsbConnected && usbPermission == UsbPermission.NotGranted,
                 buttonText = stringResource(R.string.feature_usb_button_authorise),
                 buttonImageVector = Usb24Px,
-                onClick = onReadyClick
+                onClick = onUsbRequestPermissionClick
             )
             AnimatedButton(
                 visible = usbUiState.value.isUsbConnected && usbPermission == UsbPermission.Granted,
                 buttonText = stringResource(R.string.feature_usb_button_unlock_now),
                 buttonImageVector = Key24Px,
-                onClick = onReadyClick
+                onClick = onGetPasswordClick
             )
         }
     }
@@ -175,7 +175,8 @@ private fun Preview(
                     )
                 )
             },
-            onReadyClick = {},
+            onUsbRequestPermissionClick = {},
+            onGetPasswordClick = {},
         )
     }
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1fd4c06cad0d1da2cb42af41c7b11e6e",
+    "identityHash": "da3fd5481bd7be30d29e22488445009f",
     "entities": [
       {
         "tableName": "website_events",
@@ -38,12 +38,24 @@
           "columnNames": [
             "id"
           ]
-        }
+        },
+        "indices": [
+          {
+            "name": "index_website_events_url_timestamp",
+            "unique": false,
+            "columnNames": [
+              "url",
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_website_events_url_timestamp` ON `${TABLE_NAME}` (`url`, `timestamp`)"
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1fd4c06cad0d1da2cb42af41c7b11e6e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'da3fd5481bd7be30d29e22488445009f')"
     ]
   }
 }

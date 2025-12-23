@@ -20,9 +20,9 @@ interface WebsiteEventDao {
     @Query("DELETE FROM website_events WHERE id = :id")
     suspend fun deleteById(id: String)
 
-    // Delete by URL
-    @Query("DELETE FROM website_events WHERE url = :url")
-    suspend fun deleteByUrl(url: String)
+    // Delete by URL and timestamp
+    @Query("DELETE FROM website_events WHERE url = :url AND timestamp = :timestamp")
+    suspend fun deleteByUrlAndTimestamp(url: String, timestamp: Long)
 
     // delete all events
     @Query("DELETE FROM website_events")

@@ -27,7 +27,18 @@ android {
         buildConfigField("String", "GRAVATAR_SPKI_PIN", "\"sha256/xAiTj+krWlCqnOsDColRPKS9JppjzZ15bvE+oNlMswk=\"")
         buildConfigField("String", "AVATAR_LIARA_HOST", "\"avatar.iran.liara.run\"")
         buildConfigField("String", "AVATAR_LIARA_SPKI_PIN", "\"sha256/d1/Kxmk/mF0+kMdxusbSms/pXXUmz+vus2AuWZhUmiM=\"")
-   }
+    }
+
+    flavorDimensions += "environment"
+    productFlavors {
+        create("prod") {
+            isDefault = true
+            dimension = "environment"
+        }
+        create("mock") {
+            dimension = "environment"
+        }
+    }
 
     buildTypes {
         release {

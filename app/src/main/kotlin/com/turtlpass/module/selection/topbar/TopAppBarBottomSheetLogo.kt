@@ -53,7 +53,7 @@ fun TopAppBarBottomSheetLogo(
                 imageVector = ImageVector.vectorResource(id = R.drawable.vector_turtlpass),
                 contentDescription = "TurtlPass Logo",
                 modifier = Modifier
-                    .padding(start = 22.dp)
+                    .padding(start = dimensions.x16 + dimensions.x4)
                     .size(dimensions.x32)
             )
         },

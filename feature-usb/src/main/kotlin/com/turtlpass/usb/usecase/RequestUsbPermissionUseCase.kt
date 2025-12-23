@@ -31,8 +31,9 @@ class RequestUsbPermissionUseCase @Inject constructor(
             id, // unique per device
             Intent(context, UsbPermissionReceiver::class.java).apply {
                 action = UsbPermissionReceiver.ACTION_USB_PERMISSION
+                putExtra(UsbPermissionReceiver.EXTRA_DEVICE_ID, id)
             },
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         ).let { intent ->
             usbManager.requestPermission(usbDevice, intent)
         }

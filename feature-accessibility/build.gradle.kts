@@ -20,6 +20,17 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    flavorDimensions += "environment"
+    productFlavors {
+        create("prod") {
+            isDefault = true
+            dimension = "environment"
+        }
+        create("mock") {
+            dimension = "environment"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false

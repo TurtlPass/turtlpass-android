@@ -1,33 +1,39 @@
 package com.turtlpass.module.selection.deviceFlow
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ModalBottomSheetDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.navigation.BottomSheetNavigator
 import androidx.compose.material.navigation.ModalBottomSheetLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import com.turtlpass.module.selection.deviceFlow.DeviceFlowMode
 import com.turtlpass.module.selection.topbar.TopAppBarSelection
-import com.turtlpass.ui.statusBar.StatusBarBackground
 import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.ui.theme.AppTheme.dimensions
 import com.turtlpass.usb.model.UsbUiState
 import com.turtlpass.usb.ui.UsbDeviceStateView
-import com.turtlpass.usb.ui.colorUsbDevice
+import com.turtlpass.usb.ui.rememberStripeBrush
 
 @Composable
 fun DeviceFlowContainer(
     flowMode: DeviceFlowMode,
     usbUiState: State<UsbUiState>,
+    onUsbRequestPermissionClick: () -> Unit,
     bottomSheetNavigator: BottomSheetNavigator,
-    finish: () -> Unit,
+    scrimColor: Color,
+    onBackClick: (() -> Unit)?,
     title: @Composable () -> String = { "" },
     content: @Composable () -> Unit,
 ) {
@@ -40,7 +46,7 @@ fun DeviceFlowContainer(
             topEnd = dimensions.x16
         ),
         sheetBackgroundColor = colors.default.sheetBackground,
-        scrimColor = colors.default.scrim,
+        scrimColor = scrimColor,
     ) {
         when (flowMode) {
             DeviceFlowMode.BottomSheet -> {
@@ -49,23 +55,27 @@ fun DeviceFlowContainer(
 
             DeviceFlowMode.FullScreen -> {
                 // Add AppBar/Scaffold for full screen
-                val statusBarColor = colorUsbDevice(usbUiState.value.usbDeviceUiState)
-                val animatedStatusBarColor by animateColorAsState(
-                    targetValue = statusBarColor,
-                    animationSpec = tween(durationMillis = 500)
+                val statusBarBrush = rememberStripeBrush(
+                    state = usbUiState.value.usbDeviceUiState
                 )
-
                 Scaffold(
                     topBar = {
                         Column {
-                            StatusBarBackground(color = animatedStatusBarColor)
-                            UsbDeviceStateView(
-                                usbDeviceUiState = usbUiState.value.usbDeviceUiState,
-                                backgroundColor = animatedStatusBarColor
-                            )
+                            Column(
+                                modifier = Modifier.background(statusBarBrush)
+                            ) {
+                                Spacer(
+                                    modifier = Modifier
+                                        .windowInsetsTopHeight(WindowInsets.statusBars)
+                                )
+                                UsbDeviceStateView(
+                                    usbDeviceUiState = usbUiState.value.usbDeviceUiState,
+                                    onUsbRequestPermissionClick = onUsbRequestPermissionClick
+                                )
+                            }
                             TopAppBarSelection(
                                 title = title(),
-                                onBackClick = finish
+                                onBackClick = onBackClick
                             )
                         }
                     },

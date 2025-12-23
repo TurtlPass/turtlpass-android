@@ -98,32 +98,59 @@ TurtlPass generates a unique password using a hardware-protected secret seed com
 
 **(App or Website) + Account ID + PIN**
 
+
 ### 📱 App selection
 
 You can choose an Android app in three ways:
 
-1. **Installed apps list**  
-   Browse and search all installed apps manually.
+#### 1️⃣ Installed apps list
 
-2. **Recently used apps** *(requires Usage Access)*  
-   Quickly select from apps you've used most recently.
+Browse and search all installed apps manually.
 
-3. **Automatic foreground detection** *(requires Accessibility)*  
-   When a TurtlPass device is plugged in, the app currently in the foreground is automatically detected and shown in a bottom sheet for quick confirmation.
+<a href="assets/videos/app-installed.mp4" target="_blank">
+    <img src="assets/videos/app-installed.gif" width="300px" alt="Installed apps list demo" />
+</a>
+
+#### 2️⃣ Recently used apps *(requires Usage Access)*
+
+Quickly select from apps you've used most recently.
+
+#### 3️⃣ Automatic foreground detection *(requires Accessibility)*
+
+When a TurtlPass device is plugged in, the app currently in the foreground is automatically detected and shown in a bottom sheet for quick confirmation.
+
+<a href="assets/videos/app-foreground.mp4" target="_blank">
+    <img src="assets/videos/app-foreground.gif" width="300px" alt="Foreground detection demo" />
+</a>
 
 
 ### 🌐 Website / domain selection
 
 Websites can also be selected in three ways:
 
-1. **Websites list**  
-   Manually pick a domain.
+#### 1️⃣ Websites list
 
-2. **Automatic browser detection** *(requires Accessibility)*  
-   When a browser is in the foreground, TurtlPass detects the current domain and presents it in a bottom sheet.
+Manually pick a domain.
 
-3. **Share URL to TurtlPass**  
-   Share a link from any app (typically a browser) directly to TurtlPass to select that domain instantly.
+<a href="assets/videos/web-list.mp4" target="_blank">
+    <img src="assets/videos/web-list.gif" width="300px" alt="Website list demo" />
+</a>
+
+#### 2️⃣ Automatic browser detection *(requires Accessibility)*
+
+When a browser is in the foreground, TurtlPass detects the current domain and presents it in a bottom sheet.
+
+<a href="assets/videos/web-browser.mp4" target="_blank">
+    <img src="assets/videos/web-browser.gif" width="300px" alt="Browser detection demo" />
+</a>
+
+#### 3️⃣ Share URL to TurtlPass
+
+Share a link from any app (typically a browser) directly to TurtlPass to select that domain instantly.
+
+<a href="assets/videos/web-share.mp4" target="_blank">
+    <img src="assets/videos/web-share.gif" width="300px" alt="Share URL demo" />
+</a>
 
 Recently detected domains are stored and shown under **Recent Websites** when Accessibility is enabled.
 
@@ -275,6 +302,16 @@ If you're unable to **Allow Usage Access** or **Enable Accessibility Access**, A
 **Libraries used in the Unit Tests:**
 
 [JUnit](https://junit.org/junit5/), [Mockk](https://github.com/mockk/mockk),  [Truth](https://github.com/google/truth) & [Turbine](https://github.com/cashapp/turbine)
+
+---
+
+## 📸 Screenshots
+
+|               #               |               #                |               #               |               #               |
+|:-----------------------------:|:------------------------------:|:-----------------------------:|:-----------------------------:|
+| ![](assets/screenshots/1.png) | ![](assets/screenshots/2.png)  | ![](assets/screenshots/3.png) | ![](assets/screenshots/4.png) |
+| ![](assets/screenshots/5.png) | ![](assets/screenshots/6.png)  | ![](assets/screenshots/7.png) |                               |
+| ![](assets/screenshots/8.png) | ![](assets/screenshots/9.png) | ![](assets/screenshots/10.png) |
 
 ---
 

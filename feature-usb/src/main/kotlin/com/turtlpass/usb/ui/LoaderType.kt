@@ -35,7 +35,7 @@ sealed class LoaderType {
             get() = 1
     }
 
-    object Error : LoaderType() {
+    data class Error(val errorMessage: String) : LoaderType() {
 
         override val minFrame: Int
             get() = 658

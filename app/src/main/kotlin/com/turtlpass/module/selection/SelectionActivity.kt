@@ -25,7 +25,7 @@ import com.turtlpass.module.selection.viewmodel.SelectionViewModel
 import com.turtlpass.ui.theme.AppTheme
 import com.turtlpass.usb.model.KeyDerivationInput
 import com.turtlpass.usb.model.UsbPermission
-import com.turtlpass.usb.viewmodel.UsbUiAction
+import com.turtlpass.usb.viewmodel.UsbAction
 import com.turtlpass.usb.viewmodel.UsbViewModel
 import com.turtlpass.useraccount.permission.rememberAccountsPermissionRequester
 import com.turtlpass.useraccount.viewmodel.UserAccountViewModel
@@ -97,7 +97,7 @@ class SelectionActivity : AppCompatActivity() {
 
                         selectionViewModel.uiState.value.model.selectedPin?.let { pin ->
                             val input = buildKeyDerivationInput(pin)
-                            usbViewModel.submitAction(UsbUiAction.WriteSerialInputs(input))
+                            usbViewModel.submitAction(UsbAction.WriteSerialInputs(input))
                         }
                     } else {
                         navController.navigate(NavigationDeviceItem.ConnectUsb.route)
@@ -106,7 +106,7 @@ class SelectionActivity : AppCompatActivity() {
 
                 // Collect USB events
                 LaunchedEffect(Unit) {
-                    usbViewModel.events.collect { event ->
+                    usbViewModel.uiEvents.collect { event ->
                         selectionViewModel.updateUsbUiEvent(event)
                     }
                 }
@@ -173,10 +173,14 @@ class SelectionActivity : AppCompatActivity() {
                             navigateToWriteSerialInputs()
                         }
                     },
+                    clearPin = { selectionViewModel.updatePin(null) },
                     onFingerprint = {
                         biometricViewModel.submitAction(
                             BiometricAction.Decrypt(activity = this)
                         )
+                    },
+                    onUsbRequestPermissionClick = {
+                        usbViewModel.submitAction(UsbAction.RequestPermission)
                     },
                     onWriteUsbSerial = { // onRetry
                         navigateToWriteSerialInputs()

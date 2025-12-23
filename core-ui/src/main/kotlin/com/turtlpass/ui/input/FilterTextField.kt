@@ -35,6 +35,7 @@ import com.turtlpass.ui.theme.AppTheme.typography
 @Composable
 fun FilterTextField(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
@@ -49,6 +50,7 @@ fun FilterTextField(
                 focused = focusState.isFocused
                 onFocusChanged(focused)
             },
+        enabled = enabled,
         value = value,
         label = if (value.isNotEmpty() || focused) null else {
             {

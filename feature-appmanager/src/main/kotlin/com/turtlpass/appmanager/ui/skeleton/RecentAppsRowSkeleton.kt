@@ -7,14 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.turtlpass.ui.theme.AppTheme.dimensions
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.hazeSource
 
 @Composable
 fun RecentAppsRowSkeleton(
     modifier: Modifier = Modifier,
     itemCount: Int = 6,
-    hazeState: HazeState,
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
@@ -30,7 +27,7 @@ fun RecentAppsRowSkeleton(
             }
 
             AndroidAdaptiveIconSkeleton(
-                modifier = itemModifier.hazeSource(hazeState)
+                modifier = itemModifier
             )
         }
     }

@@ -17,6 +17,8 @@ import com.turtlpass.module.chooser.viewmodel.ChooserViewModel
 import com.turtlpass.module.main.navigation.NavigationItem
 import com.turtlpass.ui.theme.AppTheme
 import com.turtlpass.urlmanager.viewmodel.UrlManagerViewModel
+import com.turtlpass.usb.viewmodel.UsbAction
+import com.turtlpass.usb.viewmodel.UsbViewModel
 import com.turtlpass.useraccount.permission.rememberAccountsPermissionRequester
 import com.turtlpass.useraccount.viewmodel.UserAccountViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private val userAccountViewModel by viewModels<UserAccountViewModel>()
     private val appManagerViewModel by viewModels<AppManagerViewModel>()
     private val urlManagerViewModel by viewModels<UrlManagerViewModel>()
+    private val usbViewModel by viewModels<UsbViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen() // handle the splash screen transition
@@ -59,8 +62,12 @@ class MainActivity : AppCompatActivity() {
                 MainScreen(
                     navController = navController,
                     appManagerUiState = appManagerViewModel.uiState.collectAsStateWithLifecycle(),
+                    onAppSearch = { query -> appManagerViewModel.onAppSearch(query) },
                     urlManagerUiState = urlManagerViewModel.uiState.collectAsStateWithLifecycle(),
                     usbUiState = chooserViewModel.usbUiState.collectAsStateWithLifecycle(),
+                    onUsbRequestPermissionClick = {
+                        usbViewModel.submitAction(UsbAction.RequestPermission)
+                    },
                     userAccountUiState = userAccountViewModel.uiState.collectAsStateWithLifecycle(),
                     onAccountPickerRequested = { requestAccountPermissions() },
                     onUserAccount = { account ->
@@ -71,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                     },
                     onDeleteWebsite = { website -> urlManagerViewModel.deleteWebsite(website) },
                     onClearAllWebsites = { urlManagerViewModel.clearAllWebsites() },
-                    finishApp = { finish() }
+                    finish = { finish() }
                 )
             }
         }

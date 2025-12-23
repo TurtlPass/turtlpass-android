@@ -3,18 +3,13 @@ package com.turtlpass.usb.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
-import com.turtlpass.domain.parcelable
 import com.turtlpass.usb.di.UsbPermissionReceiverEntryPoint
-import com.turtlpass.usb.model.UsbAction
+import com.turtlpass.usb.model.UsbEvent
 import com.turtlpass.usb.usecase.UsbUpdatesUseCase
 import dagger.hilt.android.EntryPointAccessors
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
-
 
 /**
  * Handles USB permission results coming from UsbManager.requestPermission().
@@ -26,11 +21,17 @@ class UsbPermissionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action != ACTION_USB_PERMISSION) return
 
-        val device: UsbDevice? = intent.parcelable(UsbManager.EXTRA_DEVICE)
-        val granted = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
+        val deviceId = intent.getIntExtra(EXTRA_DEVICE_ID, -1)
+        if (deviceId == -1) {
+            Timber.w("USB permission result without deviceId")
+            return
+        }
+        val usbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
+        val device = usbManager.deviceList.values
+            .firstOrNull { it.deviceId == deviceId }
 
         if (device == null) {
-            Timber.w("UsbPermissionReceiver: Missing device in intent")
+            Timber.w("USB permission result but device missing")
             return
         }
 
@@ -39,21 +40,23 @@ class UsbPermissionReceiver : BroadcastReceiver() {
             context.applicationContext,
             UsbPermissionReceiverEntryPoint::class.java
         ).apply {
-            requestUsbPermissionUseCase().onPermissionResult(device.deviceId)
+            requestUsbPermissionUseCase().onPermissionResult(deviceId)
         }
 
-        CoroutineScope(Dispatchers.Default).launch {
-            if (granted) {
+        runBlocking {
+            // check hasPermission because EXTRA_PERMISSION_GRANTED is unreliable
+            if (usbManager.hasPermission(device)) {
                 Timber.i("USB permission granted for ${device.deviceName}")
-                UsbUpdatesUseCase.emit(UsbAction.PermissionGranted(device))
+                UsbUpdatesUseCase.emit(UsbEvent.AttachedWithPermission(device))
             } else {
                 Timber.w("USB permission denied for ${device.deviceName}")
-                UsbUpdatesUseCase.emit(UsbAction.PermissionNotGranted(device))
+                UsbUpdatesUseCase.emit(UsbEvent.AttachedWithoutPermission(device))
             }
         }
     }
 
     companion object {
         const val ACTION_USB_PERMISSION = "com.turtlpass.USB_PERMISSION"
+        const val EXTRA_DEVICE_ID = "device_id"
     }
 }

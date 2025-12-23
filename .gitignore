@@ -3,6 +3,7 @@
 /build
 /app/build
 /app/release
+/app/prod
 /.gradle
 /local.properties
 /app/plugins/internal/build/

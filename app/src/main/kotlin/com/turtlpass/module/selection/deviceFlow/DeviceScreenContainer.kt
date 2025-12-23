@@ -10,6 +10,7 @@ import com.turtlpass.usb.model.UsbUiState
 fun DeviceScreenContainer(
     mode: DeviceFlowMode,
     usbUiState: State<UsbUiState>,
+    onUsbRequestPermissionClick: () -> Unit,
     title: String? = null,
     onCancel: (() -> Unit)? = null,
     content: @Composable () -> Unit
@@ -18,6 +19,7 @@ fun DeviceScreenContainer(
         DeviceFlowMode.BottomSheet -> {
             BottomSheetContainer(
                 usbUiState = usbUiState,
+                onUsbRequestPermissionClick = onUsbRequestPermissionClick,
                 title = title,
                 onCancel = onCancel,
             ) {

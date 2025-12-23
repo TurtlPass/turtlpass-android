@@ -45,7 +45,8 @@ import com.turtlpass.usb.R
 fun LoaderScreen(
     modifier: Modifier = Modifier,
     loaderType: LoaderType,
-    onClick: ((LoaderType) -> Unit),
+    onCloseClick: () -> Unit,
+    onRetryClick: () -> Unit,
 ) {
     val composition by rememberLottieComposition(
         spec = LottieCompositionSpec.Asset("lottie_loading_success_error.json")
@@ -87,31 +88,15 @@ fun LoaderScreen(
             text = when (loaderType) {
                 LoaderType.Loading -> stringResource(R.string.feature_usb_connecting)
                 LoaderType.Success -> stringResource(R.string.feature_usb_success_device_ready)
-                LoaderType.Error -> stringResource(R.string.feature_usb_error_try_again)
+                is LoaderType.Error -> stringResource(
+                    id = R.string.feature_usb_error_message,
+                    loaderType.errorMessage
+                )
             },
             textAlign = TextAlign.Center,
             style = typography.h2,
         )
-        AnimatedVisibility(visible = loaderType == LoaderType.Success) {
-            PrimaryButton(
-                modifier = Modifier
-                    .wrapContentWidth()
-                    .wrapContentHeight()
-                    .align(alignment = Alignment.CenterHorizontally)
-                    .padding(horizontal = dimensions.x32)
-                    .padding(bottom = dimensions.x16),
-                backgroundColor = colors.default.button,
-                imageVector = ExitToApp24Px,
-                text = stringResource(R.string.feature_usb_close),
-                onClick = {
-                    if (loaderType == LoaderType.Success) {
-                        isPlaying = false
-                        onClick(loaderType)
-                    }
-                },
-            )
-        }
-        AnimatedVisibility(visible = loaderType == LoaderType.Error) {
+        AnimatedVisibility(visible = loaderType is LoaderType.Error) {
             PrimaryButton(
                 modifier = Modifier
                     .wrapContentWidth()
@@ -122,19 +107,29 @@ fun LoaderScreen(
                 backgroundColor = colors.default.error,
                 imageVector = RestartAlt24Px,
                 text = stringResource(R.string.feature_usb_try_again),
-                onClick = {
-                    if (loaderType == LoaderType.Error) {
-                        isPlaying = false
-                        onClick(loaderType)
-                    }
-                },
+                onClick = onRetryClick,
+            )
+        }
+        AnimatedVisibility(visible = loaderType != LoaderType.Loading) {
+            PrimaryButton(
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .wrapContentHeight()
+                    .align(alignment = Alignment.CenterHorizontally)
+                    .padding(horizontal = dimensions.x32)
+                    .padding(bottom = dimensions.x16),
+                backgroundColor = colors.default.button,
+                imageVector = ExitToApp24Px,
+                text = stringResource(R.string.feature_usb_close),
+                onClick = onCloseClick,
             )
         }
     }
 }
 
 private class LoaderTypeProvider : PreviewParameterProvider<LoaderType> {
-    override val values = sequenceOf(LoaderType.Loading, LoaderType.Success, LoaderType.Error)
+    override val values =
+        sequenceOf(LoaderType.Loading, LoaderType.Success, LoaderType.Error("SEED_NOT_INITIALIZED"))
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -163,7 +158,8 @@ private fun Preview(
             modifier = Modifier.fillMaxHeight(),
 //            modifier = Modifier.wrapContentHeight(),
             loaderType = item,
-            onClick = {}
+            onCloseClick = {},
+            onRetryClick = {}
         )
     }
 }

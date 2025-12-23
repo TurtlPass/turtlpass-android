@@ -26,6 +26,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        missingDimensionStrategy("environment", "prod")
 
         buildConfigField("Long", "TIMEOUT_MILLIS", "5000L")
         resValue("bool", "uses_clear_text_traffic", "false")

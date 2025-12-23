@@ -22,8 +22,8 @@ class WebsiteRepository @Inject constructor(
         dao.deleteById(id)
     }
 
-    suspend fun deleteByUrl(url: String) {
-        dao.deleteByUrl(url)
+    suspend fun deleteByUrlAndTimestamp(url: String, timestamp: Long) {
+        dao.deleteByUrlAndTimestamp(url, timestamp)
     }
 
     suspend fun clearAll() {

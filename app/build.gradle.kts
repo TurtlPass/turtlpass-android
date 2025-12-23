@@ -27,10 +27,22 @@ android {
         minSdk = 26
         targetSdk = 36
         versionCode = 30000
-        versionName = "3.0.0-beta"
+        versionName = "3.0.0"
         vectorDrawables { useSupportLibrary = true }
-        missingDimensionStrategy("device", "anyDevice")
     }
+    
+    flavorDimensions += "environment"
+    productFlavors {
+        create("prod") {
+            isDefault = true
+            dimension = "environment"
+        }
+        create("mock") {
+            dimension = "environment"
+            versionNameSuffix = "-mock"
+        }
+    }
+
     signingConfigs {
         create("release") {
             storeFile = file(localProps.getProperty("turtlpassKeystore"))
@@ -39,6 +51,7 @@ android {
             keyPassword = localProps.getProperty("turtlpassKeystoreKeyPassword")
         }
     }
+
     buildTypes {
         release {
             getByName("release") {
@@ -91,6 +104,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
     implementation(libs.animation.core)
+    implementation(libs.androidx.lifecycle.process)
     debugImplementation(libs.compose.ui.tooling)
     // Lifecycle
     implementation(libs.bundles.lifecycle)
@@ -121,8 +135,6 @@ dependencies {
     implementation(libs.usb.serial)
     implementation(libs.guava)
     debugImplementation(libs.leakcanary)
-    debugImplementation(libs.chucker)
-    releaseImplementation(libs.chucker.noop)
 
     //# Test dependencies
     testImplementation(libs.bundles.testUnit)

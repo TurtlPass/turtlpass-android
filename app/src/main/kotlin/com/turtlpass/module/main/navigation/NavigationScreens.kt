@@ -41,11 +41,13 @@ fun NavigationScreens(
     urlManagerUiState: State<UrlManagerUiState>,
     navController: NavHostController,
     onUserSelected: (account: UserAccount) -> Unit,
+    appSearchEnabled: Boolean,
+    onAppSearch: (query: String) -> Unit,
     onAppSelected: (app: InstalledAppUi) -> Unit,
     onSelectWebsite: (websiteUi: WebsiteUi) -> Unit,
     onDeleteWebsite: (websiteUi: WebsiteUi) -> Unit,
     onClearAllWebsites: () -> Unit,
-    popBackStack: () -> Unit,
+    popBackStack: (String?) -> Unit
 ) {
     NavHost(navController, startDestination = NavigationItem.App.route) {
 
@@ -80,6 +82,8 @@ fun NavigationScreens(
                 appManagerUiState = appManagerUiState,
                 hazeState = hazeState,
                 topAppBarState = topAppBarState,
+                appSearchEnabled = appSearchEnabled,
+                onAppSearch = onAppSearch,
                 onAppSelected = { installedApp ->
                     onAppSelected(installedApp)
                 },
@@ -92,7 +96,7 @@ fun NavigationScreens(
                     accountList = if (result is Result.Success) result.data else emptyList(),
                     onAccountSelected = { accountItem ->
                         onUserSelected(accountItem)
-                        popBackStack()
+                        popBackStack(null)
                     }
                 )
             }

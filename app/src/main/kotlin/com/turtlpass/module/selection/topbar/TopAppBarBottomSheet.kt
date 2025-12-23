@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.turtlpass.ui.icons.ArrowBack24Px
 import com.turtlpass.ui.icons.Close24Px
 import com.turtlpass.ui.theme.AppTheme
 import com.turtlpass.ui.theme.AppTheme.colors
@@ -51,7 +52,7 @@ fun TopAppBarBottomSheet(
                 onClick = { onCancel?.invoke() }
             ) {
                 Icon(
-                    imageVector = Close24Px,
+                    imageVector = ArrowBack24Px,
                     contentDescription = "Close",
                     tint = colors.text.primary,
                 )

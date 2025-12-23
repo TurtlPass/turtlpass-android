@@ -46,10 +46,12 @@ fun SelectionNavigationScreens(
     title: @Composable () -> String = { "" },
     onAccountPickerRequested: () -> Unit,
     onUserAccount: (account: UserAccount?) -> Unit,
-    popBackStack: () -> Unit,
     onPinCompleted: (pin: List<Int>, enableFingerprint: Boolean) -> Unit,
+    clearPin: () -> Unit,
     onFingerprint: () -> Unit,
+    onUsbRequestPermissionClick: () -> Unit,
     onWriteUsbSerial: () -> Unit,
+    popBackStack: () -> Unit,
     finish: () -> Unit,
 ) {
     NavHost(navController, startDestination = NavigationDeviceItem.Selection.route) {
@@ -57,6 +59,7 @@ fun SelectionNavigationScreens(
             DeviceScreenContainer(
                 mode = flowMode,
                 usbUiState = usbUiState,
+                onUsbRequestPermissionClick = onUsbRequestPermissionClick,
             ) {
                 BackHandler { finish() }
                 SelectedInputsScreen(
@@ -95,10 +98,11 @@ fun SelectionNavigationScreens(
             DeviceScreenContainer(
                 mode = flowMode,
                 usbUiState = usbUiState,
-                onCancel = finish,
+                onUsbRequestPermissionClick = onUsbRequestPermissionClick,
+                onCancel = popBackStack,
                 title = title()
             ) {
-                BackHandler { finish() }
+                BackHandler { popBackStack() }
                 UserPinScreen(
                     modifier = if (flowMode == DeviceFlowMode.FullScreen) Modifier.fillMaxHeight()
                     else Modifier.wrapContentHeight(),
@@ -114,15 +118,17 @@ fun SelectionNavigationScreens(
             DeviceScreenContainer(
                 mode = flowMode,
                 usbUiState = usbUiState,
-                onCancel = finish,
+                onUsbRequestPermissionClick = onUsbRequestPermissionClick,
+                onCancel = { popBackStack(); clearPin() },
                 title = title()
             ) {
-                BackHandler { finish() }
+                BackHandler { popBackStack(); clearPin() }
                 ConnectUsbScreen(
                     modifier = if (flowMode == DeviceFlowMode.FullScreen) Modifier.fillMaxHeight()
                     else Modifier.wrapContentHeight(),
                     usbUiState = usbUiState,
-                    onReadyClick = {
+                    onUsbRequestPermissionClick = onUsbRequestPermissionClick,
+                    onGetPasswordClick = {
                         navController.navigate(NavigationDeviceItem.Loader.route)
                         onWriteUsbSerial()
                     }
@@ -133,21 +139,17 @@ fun SelectionNavigationScreens(
             DeviceScreenContainer(
                 mode = flowMode,
                 usbUiState = usbUiState,
-                onCancel = finish,
+                onUsbRequestPermissionClick = onUsbRequestPermissionClick,
+                onCancel = null,
                 title = title()
             ) {
-                BackHandler { finish() }
+                BackHandler {}
                 LoaderScreen(
                     modifier = if (flowMode == DeviceFlowMode.FullScreen) Modifier.fillMaxHeight()
                     else Modifier.wrapContentHeight(),
                     loaderType = uiState.value.loaderType,
-                    onClick = { state ->
-                        when (state) {
-                            LoaderType.Success -> finish()
-                            LoaderType.Error -> onWriteUsbSerial() // onRetry
-                            else -> {}
-                        }
-                    }
+                    onCloseClick = { finish(); clearPin() },
+                    onRetryClick = { onWriteUsbSerial() }
                 )
             }
         }

@@ -6,7 +6,7 @@
         <activity
             android:name="com.turtlpass.urlmanager.share.ShareReceiverActivity"
             android:exported="true"
-            android:theme="@style/Theme.TransparentActivity.NoSplash">
+            android:theme="@style/Theme.App.Transparent.NoSplash">
 
             <!-- Single item share -->
             <intent-filter>

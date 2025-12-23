@@ -3,13 +3,16 @@ package com.turtlpass.urlmanager.ui
 import android.content.Intent
 import android.content.res.Configuration
 import android.provider.Settings
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -48,12 +50,16 @@ import com.turtlpass.urlmanager.R
 import com.turtlpass.urlmanager.ui.menu.IconContextMenu
 import com.turtlpass.urlmanager.ui.skeleton.UrlItemSkeleton
 import com.turtlpass.urlmanager.viewmodel.UrlManagerUiState
+import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
+enum class UrlListContent { Permission, Loading, List, Empty }
 
 @OptIn(
     ExperimentalHazeMaterialsApi::class,
@@ -67,147 +73,149 @@ fun UrlListScreen(
     onDeleteWebsite: (websiteUi: WebsiteUi) -> Unit,
     onClearAll: () -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
     val websiteList: List<WebsiteUi> = urlManagerUiState.value.websiteListResult.let { result ->
         if (result is Result.Success) result.data else emptyList()
     }
     var expandedItemKey by remember { mutableStateOf<String?>(null) }
 
-    Box {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colors.default.background)
-        ) {
-            // HEADER
-            item {
-                Row(
-                    modifier = Modifier
-                        .hazeSource(hazeState)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .wrapContentWidth()
-                            .padding(top = dimensions.x16)
-                            .padding(bottom = dimensions.x8 + dimensions.x4)
-                            .padding(horizontal = dimensions.x16),
-                        text = stringResource(R.string.feature_urlmanager_recent_websites),
-                        style = typography.h2.copy(
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = colors.text.primary,
-                        ),
-                    )
-                    AnimatedVisibility(
-                        visible = urlManagerUiState.value.isAccessibilityEnabled
-                                && websiteList.isNotEmpty()
-                    ) {
-                        IconContextMenu(onDelete = onClearAll)
-                    }
-                }
-            }
+    val contentState = when {
+        urlManagerUiState.value.isAccessibilityEnabled.not() ->
+            UrlListContent.Permission
 
-            // EMPTY STATE WHEN ACCESSIBILITY ENABLED BUT LIST EMPTY
-            if (
-                urlManagerUiState.value.isAccessibilityEnabled &&
-                !urlManagerUiState.value.websiteListResult.isLoading() &&
-                websiteList.isEmpty()
-            ) {
-                item {
-                    EmptyWebsitesState(
-                        modifier = Modifier
-                            .hazeSource(hazeState)
-                            .fillParentMaxSize()
-                            .padding(bottom = dimensions.x64)
-                            .padding(horizontal = dimensions.x16)
-                    )
-                }
-            }
-            // SKELETON LOADING
-            else if (urlManagerUiState.value.websiteListResult.isLoading()) {
-                items(12) {
-                    AnimatedVisibility(visible = urlManagerUiState.value.isAccessibilityEnabled) {
-                        UrlItemSkeleton(
-                            modifier = Modifier
-                                .hazeSource(hazeState)
-                                .padding(vertical = dimensions.x4)
-                                .padding(horizontal = dimensions.x16)
-                                .animateItem()
-                        )
-                    }
-                }
-                // ACTUAL WEBSITE ITEMS
-            } else {
-                itemsIndexed(
-                    items = websiteList,
-                    key = { _, item -> "${item.timestamp}_${item.url}" }
-                ) { index, websiteUi ->
-                    var isVisible by remember { mutableStateOf(true) }
-                    val itemKey = "${websiteUi.timestamp}_${websiteUi.url}"
+        urlManagerUiState.value.websiteListResult.isLoading() ->
+            UrlListContent.Loading
 
-                    AnimatedVisibility(
-                        visible = isVisible && urlManagerUiState.value.isAccessibilityEnabled,
-                        exit = shrinkVertically(animationSpec = tween(250)) + fadeOut(
-                            animationSpec = tween(
-                                250
-                            )
-                        )
-                    ) {
-                        val verticalModifier = when (index) {
-                            websiteList.lastIndex -> Modifier
-                                .padding(top = dimensions.x4)
-                                .padding(bottom = dimensions.x8)
+        urlManagerUiState.value.isAccessibilityEnabled && websiteList.isEmpty() ->
+            UrlListContent.Empty
 
-                            else -> Modifier.padding(vertical = dimensions.x4)
-                        }
+        else ->
+            UrlListContent.List
+    }
 
-                        SwipeRevealUrlItem(
-                            modifier = verticalModifier
-                                .hazeSource(hazeState)
-                                .animateItem(), // smooth diff animation
-                            websiteUi = websiteUi,
-                            isExpanded = expandedItemKey == itemKey,
-                            onExpandChanged = { expanded ->
-                                expandedItemKey = if (expanded) itemKey else null
-                            },
-                            onSelectWebsite = {
-                                onSelectWebsite(websiteUi)
-                            },
-                            onDelete = {
-                                // Animate exit before removing
-                                isVisible = false
-                                scope.launch {
-                                    delay(250)
-                                    onDeleteWebsite(websiteUi)
-                                    if (expandedItemKey == itemKey) expandedItemKey = null
-                                }
-                            }
-                        )
-                    }
-                }
-            }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colors.default.background)
+    ) {
+        // HEADER
+        HeaderRow(
+            hazeState = hazeState,
+            showClearAll = urlManagerUiState.value.isAccessibilityEnabled && websiteList.isNotEmpty(),
+            onClearAll = onClearAll
+        )
 
-            item {
-                AnimatedVisibility(visible = urlManagerUiState.value.isAccessibilityEnabled.not()) {
+        // CONTENT
+        AnimatedContent(
+            targetState = contentState,
+            contentKey = { it },
+            transitionSpec = {
+                (fadeIn(tween(180)) + slideInVertically { it / 12 }) togetherWith
+                        (fadeOut(tween(120)) + slideOutVertically { it / 12 })
+            },
+            label = "UrlListContent"
+        ) { state ->
+            when (state) {
+                UrlListContent.Permission -> {
                     ActionCard(
                         modifier = Modifier
-                            .hazeSource(hazeState)
                             .fillMaxWidth()
                             .wrapContentHeight()
                             .padding(horizontal = dimensions.x16),
                         text = stringResource(R.string.feature_urlmanager_rationale_accessibility),
                         buttonText = stringResource(R.string.feature_urlmanager_rationale_accessibility_button),
                         onClick = {
-                            context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+                            context.startActivity(
+                                Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+                            )
                         },
-                        backgroundColor = colors.default.cardBackground,
+                        backgroundColor = colors.default.cardBackground
+                    )
+                }
+
+                UrlListContent.Loading -> {
+                    LazyColumn {
+                        items(12, key = { "skeleton_$it" }) {
+                            UrlItemSkeleton(
+                                modifier = Modifier
+                                    .padding(horizontal = dimensions.x16, vertical = dimensions.x4)
+                            )
+                        }
+                    }
+                }
+
+                UrlListContent.Empty -> {
+                    EmptyWebsitesState(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = dimensions.x16)
+                            .padding(bottom = dimensions.x32)
+                    )
+                }
+
+                UrlListContent.List -> {
+                    WebsiteListContent(
+                        websiteList = websiteList,
+                        hazeState = hazeState,
+                        expandedItemKey = expandedItemKey,
+                        onExpandChanged = { expandedItemKey = it },
+                        onSelectWebsite = onSelectWebsite,
+                        onDeleteWebsite = { websiteUi ->
+                            scope.launch {
+                                delay(250)
+                                onDeleteWebsite(websiteUi)
+                                if (expandedItemKey == "${websiteUi.timestamp}_${websiteUi.url}") {
+                                    expandedItemKey = null
+                                }
+                            }
+                        }
                     )
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalHazeMaterialsApi::class)
+@Composable
+private fun HeaderRow(
+    hazeState: HazeState,
+    showClearAll: Boolean,
+    onClearAll: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .hazeEffect(
+                state = hazeState,
+                style = HazeMaterials.ultraThick(containerColor = colors.default.background),
+            ) {
+                progressive = HazeProgressive.verticalGradient(
+                    startIntensity = 1f,
+                    endIntensity = 0f,
+                    preferPerformance = true
+                )
+            },
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            modifier = Modifier
+                .wrapContentWidth()
+                .padding(top = dimensions.x16)
+                .padding(bottom = dimensions.x8 + dimensions.x4)
+                .padding(horizontal = dimensions.x16),
+            text = stringResource(R.string.feature_urlmanager_recent_websites),
+            style = typography.h2.copy(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = colors.text.primary,
+            ),
+        )
+        if (showClearAll) {
+            IconContextMenu(onDelete = onClearAll)
         }
     }
 }

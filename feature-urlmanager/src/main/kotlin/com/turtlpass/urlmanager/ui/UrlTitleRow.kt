@@ -1,6 +1,5 @@
 package com.turtlpass.urlmanager.ui
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -21,23 +20,24 @@ fun UrlTitleRow(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Row(verticalAlignment = Alignment.Bottom) {
-            Text(
-                text = url,
-                style = typography.title.copy(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Normal,
-                ),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
         Text(
-            modifier = Modifier.padding(end = 6.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 8.dp),
+            text = url,
+            style = typography.title.copy(
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Normal,
+            ),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Text(
             text = time,
             style = typography.subtitle,
+            softWrap = false
         )
     }
 }

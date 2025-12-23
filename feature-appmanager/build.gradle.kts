@@ -24,6 +24,17 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    flavorDimensions += "environment"
+    productFlavors {
+        create("prod") {
+            isDefault = true
+            dimension = "environment"
+        }
+        create("mock") {
+            dimension = "environment"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -55,6 +66,8 @@ dependencies {
     // Compose
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
+    implementation(libs.animation.core)
+    implementation(libs.androidx.foundation)
     debugImplementation(libs.compose.ui.tooling)
     // Lifecycle
     implementation(libs.bundles.lifecycle)

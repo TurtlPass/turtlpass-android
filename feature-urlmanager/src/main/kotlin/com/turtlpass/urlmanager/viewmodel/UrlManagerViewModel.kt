@@ -55,7 +55,7 @@ class UrlManagerViewModel @Inject constructor(
 
     fun deleteWebsite(website: WebsiteUi) {
         viewModelScope.launch {
-            websiteRepository.deleteByUrl(website.url)
+            websiteRepository.deleteByUrlAndTimestamp(website.url, website.timestamp)
         }
     }
 

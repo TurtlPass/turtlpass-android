@@ -30,6 +30,8 @@ paletteKtx = "1.0.0"
 animationCore = "1.10.0"
 coil = "3.3.0"
 haze = "1.7.1"
+foundation = "1.10.0"
+lifecycleProcess = "2.10.0"
 
 
 ##############################
@@ -164,6 +166,8 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 runner = { group = "androidx.test", name = "runner", version.ref = "androidxTest" }
 core = { group = "androidx.test", name = "core", version.ref = "androidxTest" }
+androidx-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleProcess" }
 
 
 ##############################

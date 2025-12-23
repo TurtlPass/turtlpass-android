@@ -33,10 +33,8 @@ class RecentAppsUsageProvider @Inject constructor(
             if (stats.isNullOrEmpty()) return null
 
             val minUsageMillis = minUsageSeconds * 1000L
-//            val ourPackage = context.packageName
 
             stats
-                //.filter { it.packageName != ourPackage }
                 .filter { it.lastTimeUsed > 0 }
                 .filter { it.totalTimeInForeground >= minUsageMillis }
                 .sortedByDescending { it.lastTimeUsed }

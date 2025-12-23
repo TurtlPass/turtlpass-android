@@ -16,6 +16,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        missingDimensionStrategy("environment", "prod")
     }
 
     buildTypes {
@@ -63,6 +64,4 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.usb.serial)
     implementation(libs.guava)
-    debugImplementation(libs.chucker)
-    releaseImplementation(libs.chucker.noop)
 }

@@ -1,15 +1,14 @@
 package com.turtlpass.module.selection.deviceFlow
 
 import android.content.res.Configuration
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -24,58 +23,39 @@ import com.turtlpass.ui.theme.AppTheme.dimensions
 import com.turtlpass.usb.model.UsbDeviceUiState
 import com.turtlpass.usb.model.UsbUiState
 import com.turtlpass.usb.ui.UsbDeviceStateView
-import com.turtlpass.usb.ui.colorUsbDevice
+import com.turtlpass.usb.ui.rememberStripeBrush
 
 @Composable
 fun BottomSheetContainer(
     usbUiState: State<UsbUiState>,
+    onUsbRequestPermissionClick: () -> Unit,
     title: String? = null,
     onCancel: (() -> Unit)?,
     content: @Composable () -> Unit,
 ) {
-    val statusBarColor = colorUsbDevice(usbUiState.value.usbDeviceUiState)
-    val animatedStatusBarColor by animateColorAsState(
-        targetValue = statusBarColor,
-        animationSpec = tween(durationMillis = 500)
+    val statusBarBrush = rememberStripeBrush(
+        state = usbUiState.value.usbDeviceUiState
     )
-
     Column(
         Modifier.wrapContentHeight()
     ) {
-        /*Box(
-            modifier = Modifier
-                .background(animatedStatusBarColor)
-                .fillMaxWidth()
+        Column(
+            modifier = Modifier.background(statusBarBrush)
         ) {
-            // DragHandle
-            Box(
-                modifier = Modifier
-                    .align(alignment = Alignment.Center)
-                    .padding(
-                        top = dimensions.x16,
-                        bottom = dimensions.x8
-                    )
-                    .height(5.dp)
-                    .width(38.dp)
-                    .clip(shape = RoundedCornerShape(dimensions.x16))
-                    .background(Color.White)
+            UsbDeviceStateView(
+                modifier = Modifier.padding(top = dimensions.x4),
+                usbDeviceUiState = usbUiState.value.usbDeviceUiState,
+                onUsbRequestPermissionClick = onUsbRequestPermissionClick
             )
-        }*/
-
-        UsbDeviceStateView(
-            usbDeviceUiState = usbUiState.value.usbDeviceUiState,
-            backgroundColor = animatedStatusBarColor
-        )
-
+        }
         if (title == null) {
             TopAppBarBottomSheetLogo()
-        } else {
+        } else if (onCancel != null) {
             TopAppBarBottomSheet(
                 title = title,
                 onCancel = onCancel,
             )
         }
-
         content()
     }
 }
@@ -113,8 +93,9 @@ private fun Preview(
         ) {
             BottomSheetContainer(
                 usbUiState = remember { mutableStateOf(UsbUiState(usbDeviceUiState = item)) },
+                onUsbRequestPermissionClick = {},
                 onCancel = null,
-                content = {}
+                content = {},
             )
         }
     }

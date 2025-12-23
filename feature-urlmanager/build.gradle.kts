@@ -24,9 +24,20 @@ android {
         consumerProguardFiles("consumer-rules.pro")
 
         buildConfigField("String", "GOOGLE_HOST", "\"www.google.com\"")
-        buildConfigField("String", "GOOGLE_SPKI_PIN", "\"sha256/iXK48jI+5eMBOyAex+NUO125Sv+Wx0hfOyQHdyuQ2pQ=\"")
+        buildConfigField("String", "GOOGLE_SPKI_PIN", "\"sha256/JCAFDAmMdfOmLIisB8eTtLgO2la69Ed7AzzZDyngI9g=\"")
         buildConfigField("String", "GSTATIC_HOST", "\".gstatic.com\"")
-        buildConfigField("String", "GSTATIC_SPKI_PIN", "\"sha256/NeARMRZSkfI40s+ApV0QxHMvkN5y8VQ+kCiwH9Hl/e0=\"")
+        buildConfigField("String", "GSTATIC_SPKI_PIN", "\"sha256/sDIcuByt0WP0MQ0UV0QZ71i4IQMaIQPXs1cRWh9d5YU=\"")
+    }
+
+    flavorDimensions += "environment"
+    productFlavors {
+        create("prod") {
+            isDefault = true
+            dimension = "environment"
+        }
+        create("mock") {
+            dimension = "environment"
+        }
     }
 
     buildTypes {

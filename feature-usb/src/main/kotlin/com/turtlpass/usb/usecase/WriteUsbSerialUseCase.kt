@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import timber.log.Timber
+import turtlpass.Turtlpass
 import turtlpass.Turtlpass.Response
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
@@ -40,7 +41,7 @@ class WriteUsbSerialUseCase @Inject constructor(
 
                 if (!HardwareConfiguration.isSupported(usbDevice)) {
                     Timber.e("Unsupported USB device: $usbDevice")
-                    trySend(UsbWriteResult.Error)
+                    trySend(UsbWriteResult.Error(Turtlpass.ErrorCode.UNRECOGNIZED))
                     close()
                     return@callbackFlow
                 }
@@ -49,13 +50,13 @@ class WriteUsbSerialUseCase @Inject constructor(
                 usbSerialDevice = UsbSerialDevice.createUsbSerialDevice(usbDevice, connection)
 
                 val serial = usbSerialDevice ?: run {
-                    trySend(UsbWriteResult.Error)
+                    trySend(UsbWriteResult.Error(Turtlpass.ErrorCode.UNRECOGNIZED))
                     close(Exception("Failed to create serial device"))
                     return@callbackFlow
                 }
 
                 if (!serial.open()) {
-                    trySend(UsbWriteResult.Error)
+                    trySend(UsbWriteResult.Error(Turtlpass.ErrorCode.UNRECOGNIZED))
                     close(Exception("Error opening USB serial device"))
                     return@callbackFlow
                 }
@@ -90,7 +91,7 @@ class WriteUsbSerialUseCase @Inject constructor(
                             if (response.success) {
                                 trySend(UsbWriteResult.Success)
                             } else {
-                                trySend(UsbWriteResult.Error)
+                                trySend(UsbWriteResult.Error(response.error))
                             }
                         } catch (e: InvalidProtocolBufferException) {
                             Timber.e(e, "Failed to parse protobuf response")
@@ -100,7 +101,7 @@ class WriteUsbSerialUseCase @Inject constructor(
 
             } catch (e: Exception) {
                 Timber.e(e, "USB write error")
-                trySend(UsbWriteResult.Error)
+                trySend(UsbWriteResult.Error(Turtlpass.ErrorCode.UNRECOGNIZED))
                 close(e)
             }
 
@@ -108,10 +109,10 @@ class WriteUsbSerialUseCase @Inject constructor(
                 try {
                     usbSerialDevice?.close()
                     connection?.close()
-                } catch (ignore: Exception) {}
+                } catch (_: Exception) {}
             }
         }.catch {
-            emit(UsbWriteResult.Error)
+            emit(UsbWriteResult.Error(Turtlpass.ErrorCode.UNRECOGNIZED))
         }.flowOn(dispatcher)
     }
 }

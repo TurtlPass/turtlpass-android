@@ -10,6 +10,7 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:enableOnBackInvokedCallback="false"
         android:supportsRtl="true"
         android:theme="@style/Theme.App"
         tools:ignore="DataExtractionRules"
@@ -17,10 +18,10 @@
 
         <activity
             android:name=".module.main.MainActivity"
-            android:enabled="true"
-            android:exported="true"
-            android:launchMode="singleTop"
             android:theme="@style/Theme.App.Starting"
+            android:launchMode="singleTop"
+            android:exported="true"
+            android:configChanges="keyboard|keyboardHidden|navigation"
             android:windowSoftInputMode="stateHidden|adjustResize">
 
             <intent-filter>
@@ -31,12 +32,12 @@
 
         <activity
             android:name=".module.selection.SelectionActivity"
-            android:theme="@style/TransparentActivity"
+            android:theme="@style/Theme.App.Transparent"
             android:launchMode="singleTop"
-            android:excludeFromRecents="true"
-            android:taskAffinity=""
             android:exported="true"
-            android:configChanges="keyboard|keyboardHidden|navigation" />
+            android:excludeFromRecents="true"
+            android:configChanges="keyboard|keyboardHidden|navigation"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
 
     </application>
 

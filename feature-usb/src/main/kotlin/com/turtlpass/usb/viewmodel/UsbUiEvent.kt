@@ -3,5 +3,5 @@ package com.turtlpass.usb.viewmodel
 sealed class UsbUiEvent {
     object UsbWriteLoading : UsbUiEvent()
     object UsbWriteSuccess : UsbUiEvent()
-    object UsbWriteError : UsbUiEvent()
+    data class UsbWriteError(val errorMessage: String) : UsbUiEvent()
 }

@@ -10,6 +10,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,17 +24,21 @@ import com.turtlpass.R
 import com.turtlpass.appmanager.model.InstalledAppUi
 import com.turtlpass.biometric.viewmodel.BiometricUiState
 import com.turtlpass.module.selection.deviceFlow.DeviceFlowContainer
+import com.turtlpass.module.selection.deviceFlow.DeviceFlowMode
 import com.turtlpass.module.selection.model.SelectionInput
 import com.turtlpass.module.selection.model.SelectionUiState
 import com.turtlpass.module.selection.navigation.NavigationDeviceItem
 import com.turtlpass.module.selection.navigation.SelectionNavigationScreens
 import com.turtlpass.ui.bottomSheet.rememberBottomSheetNavigator
 import com.turtlpass.ui.theme.AppTheme
+import com.turtlpass.ui.theme.AppTheme.colors
 import com.turtlpass.usb.model.UsbDeviceUiState
+import com.turtlpass.usb.model.UsbPermission
 import com.turtlpass.usb.model.UsbUiState
 import com.turtlpass.useraccount.model.UserAccount
 import com.turtlpass.useraccount.viewmodel.AccountsPermission
 import com.turtlpass.useraccount.viewmodel.UserAccountUiState
+import kotlinx.coroutines.launch
 
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -49,7 +55,9 @@ fun SelectionScreen(
     onAccountPickerRequested: () -> Unit,
     onUserAccount: (account: UserAccount?) -> Unit,
     onPinCompleted: (pin: List<Int>, enableFingerprint: Boolean) -> Unit,
+    clearPin: () -> Unit,
     onFingerprint: () -> Unit,
+    onUsbRequestPermissionClick: () -> Unit,
     onWriteUsbSerial: () -> Unit,
     finish: () -> Unit,
 ) {
@@ -72,9 +80,29 @@ fun SelectionScreen(
     DeviceFlowContainer(
         flowMode = selectionUiState.value.flowMode,
         usbUiState = usbUiState,
+        onUsbRequestPermissionClick = onUsbRequestPermissionClick,
         bottomSheetNavigator = bottomSheetNavigator,
-        finish = finish,
-        title = { Title(currentRoute) }
+        scrimColor = if (selectionUiState.value.flowMode == DeviceFlowMode.FullScreen
+            && currentRoute == NavigationDeviceItem.UserAccounts.route
+        ) colors.default.scrim else Color.Transparent,
+        onBackClick = when (currentRoute) {
+            NavigationDeviceItem.Selection.route -> {
+                { finish() }
+            }
+
+            NavigationDeviceItem.UserAccounts.route -> {
+                {}
+            }
+
+            NavigationDeviceItem.PIN.route,
+            NavigationDeviceItem.ConnectUsb.route -> {
+                { popBackStack() }
+            }
+
+            NavigationDeviceItem.Loader.route -> null
+            else -> null
+        },
+        title = { Title(currentRoute, usbUiState) }
     ) {
         SelectionNavigationScreens(
             flowMode = selectionUiState.value.flowMode,
@@ -82,30 +110,47 @@ fun SelectionScreen(
             selectionUiState = selectionUiState,
             userAccountUiState = userAccountUiState,
             biometricUiState = biometricUiState,
-            title = { Title(currentRoute) },
+            title = { Title(currentRoute, usbUiState) },
             onAccountPickerRequested = onAccountPickerRequested,
             onUserAccount = onUserAccount,
             usbUiState = usbUiState,
             navController = navController,
-            popBackStack = popBackStack,
-            onPinCompleted = onPinCompleted,
+            onPinCompleted = { pin, enableFingerprint ->
+                /*if (enableFingerprint && selectionUiState.value.flowMode == DeviceFlowMode.BottomSheet) {
+                    scope.launch { sheetState.hide() }
+                }*/
+                onPinCompleted(pin, enableFingerprint)
+            },
+            clearPin = clearPin,
             onFingerprint = onFingerprint,
+            onUsbRequestPermissionClick = onUsbRequestPermissionClick,
             onWriteUsbSerial = onWriteUsbSerial,
+            popBackStack = popBackStack,
             finish = finish,
         )
     }
 }
 
 @Composable
-private fun Title(currentRoute: String?): String = when (currentRoute) {
-    NavigationDeviceItem.Selection.route,
-    NavigationDeviceItem.UserAccounts.route -> "Confirm selection"
+private fun Title(currentRoute: String?, usbState: State<UsbUiState>): String =
+    when (currentRoute) {
+        NavigationDeviceItem.Selection.route,
+        NavigationDeviceItem.UserAccounts.route -> stringResource(R.string.confirm_selection)
 
-    NavigationDeviceItem.PIN.route -> stringResource(R.string.title_enter_pin)
-    NavigationDeviceItem.ConnectUsb.route -> stringResource(R.string.feature_usb_connect_usb_device)
-    NavigationDeviceItem.Loader.route -> ""
-    else -> ""
-}
+        NavigationDeviceItem.PIN.route -> stringResource(R.string.title_enter_pin)
+        NavigationDeviceItem.ConnectUsb.route -> {
+            with(usbState.value) {
+                when {
+                    isUsbConnected.not() -> stringResource(R.string.feature_usb_connect_usb_device)
+                    usbPermission == UsbPermission.NotGranted -> stringResource(R.string.feature_usb_authorise_usb_device)
+                    else -> stringResource(R.string.feature_usb_connect_usb_device_ready)
+                }
+            }
+        }
+
+        NavigationDeviceItem.Loader.route -> ""
+        else -> ""
+    }
 
 @Preview(
     name = "Light theme",
@@ -140,10 +185,14 @@ private fun Preview() {
                     )
                 )
             },
-            userAccountUiState = remember { mutableStateOf(UserAccountUiState(
-                selectedAccount = UserAccount("hello@turtlpass.com"),
-                accountsPermission = AccountsPermission.Rationale
-            )) },
+            userAccountUiState = remember {
+                mutableStateOf(
+                    UserAccountUiState(
+                        selectedAccount = UserAccount("hello@turtlpass.com"),
+                        accountsPermission = AccountsPermission.Rationale
+                    )
+                )
+            },
             biometricUiState = remember {
                 mutableStateOf(
                     BiometricUiState(
@@ -158,7 +207,9 @@ private fun Preview() {
             onAccountPickerRequested = {},
             onUserAccount = {},
             onPinCompleted = { _, _ -> },
+            clearPin = {},
             onFingerprint = {},
+            onUsbRequestPermissionClick = {},
             onWriteUsbSerial = {},
             finish = {},
         )
